@@ -1,0 +1,472 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SistemaComunidad.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+        x:Class="SistemaComunidad.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Sistema Comunitario Integral"
+        Width="1200" Height="700"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Barra Superior -->
+        <Border Grid.Row="0" 
+                Background="#2196F3" 
+                Padding="20,15"
+                BoxShadow="0 2 8 0 #30000000">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+                    <TextBlock Text="Sistema Comunitario Integral" 
+                               FontSize="20" 
+                               FontWeight="Bold"
+                               Foreground="White"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Usuario: Administrador" 
+                               FontSize="13"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               Opacity="0.9"/>
+                    <Button Content="Cerrar Sesión"
+                            Background="#1976D2"
+                            Foreground="White"
+                            Padding="15,8"
+                            CornerRadius="4"
+                            FontSize="12"
+                            Click="CerrarSesion_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Contenido Principal -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Menú Lateral -->
+            <Border Grid.Column="0" 
+                    Background="#FFFFFF" 
+                    BorderBrush="#E0E0E0" 
+                    BorderThickness="0,0,1,0"
+                    BoxShadow="2 0 8 0 #10000000">
+                <ScrollViewer>
+                    <StackPanel Margin="0,25,0,20">
+                        
+                        <!-- Sección GESTIÓN -->
+                        <Border Background="#2196F3" 
+                                Padding="20,10" 
+                                Margin="15,0,15,15"
+                                CornerRadius="6">
+                            <TextBlock Text="GESTIÓN" 
+                                       FontSize="11" 
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       LetterSpacing="1.5"/>
+                        </Border>
+
+                        <Button Content="Dashboard" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Dashboard_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#E3F2FD"/>
+                                    <Setter Property="Foreground" Value="#1976D2"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button Content="Personas" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Personas_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#E3F2FD"/>
+                                    <Setter Property="Foreground" Value="#1976D2"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button Content="Familias" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Familias_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#E3F2FD"/>
+                                    <Setter Property="Foreground" Value="#1976D2"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <!-- Separador -->
+                        <Border Height="1" Background="#E0E0E0" Margin="20,15"/>
+
+                        <!-- Sección FINANCIERO -->
+                        <Border Background="#4CAF50" 
+                                Padding="20,10" 
+                                Margin="15,0,15,15"
+                                CornerRadius="6">
+                            <TextBlock Text="FINANCIERO" 
+                                       FontSize="11" 
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       LetterSpacing="1.5"/>
+                        </Border>
+
+                        <Button Content="Ingresos" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Ingresos_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#E8F5E9"/>
+                                    <Setter Property="Foreground" Value="#388E3C"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button Content="Egresos" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Egresos_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#E8F5E9"/>
+                                    <Setter Property="Foreground" Value="#388E3C"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button Content="Aportes" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Aportes_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#E8F5E9"/>
+                                    <Setter Property="Foreground" Value="#388E3C"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <!-- Separador -->
+                        <Border Height="1" Background="#E0E0E0" Margin="20,15"/>
+
+                        <!-- Sección CONFIGURACIÓN -->
+                        <Border Background="#9C27B0" 
+                                Padding="20,10" 
+                                Margin="15,0,15,15"
+                                CornerRadius="6">
+                            <TextBlock Text="CONFIGURACIÓN" 
+                                       FontSize="11" 
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       LetterSpacing="1.5"/>
+                        </Border>
+
+                        <Button Content="Mi Empresa" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="MiEmpresa_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#F3E5F5"/>
+                                    <Setter Property="Foreground" Value="#7B1FA2"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <!-- Separador -->
+                        <Border Height="1" Background="#E0E0E0" Margin="20,15"/>
+
+                        <!-- Sección OTROS -->
+                        <Border Background="#FF9800" 
+                                Padding="20,10" 
+                                Margin="15,0,15,15"
+                                CornerRadius="6">
+                            <TextBlock Text="OTROS" 
+                                       FontSize="11" 
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       LetterSpacing="1.5"/>
+                        </Border>
+
+                        <Button Content="Actividades" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Actividades_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#FFF3E0"/>
+                                    <Setter Property="Foreground" Value="#F57C00"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button Content="Documentos" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Documentos_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#FFF3E0"/>
+                                    <Setter Property="Foreground" Value="#F57C00"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button Content="Bienes" 
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#424242"
+                                Padding="25,12"
+                                Margin="10,0"
+                                FontSize="14"
+                                CornerRadius="4"
+                                Click="Bienes_Click">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#FFF3E0"/>
+                                    <Setter Property="Foreground" Value="#F57C00"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Área de Contenido -->
+            <Border Grid.Column="1" Background="#FAFAFA">
+                <ScrollViewer>
+                    <StackPanel Margin="30" Spacing="20">
+                        
+                        <TextBlock Text="Dashboard" 
+                                   FontSize="28" 
+                                   FontWeight="Bold"
+                                   Foreground="#212121"/>
+
+                    <!-- Tarjetas de Estadísticas -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Styles>
+                            <Style Selector="Border">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="CornerRadius" Value="8"/>
+                                <Setter Property="Padding" Value="20"/>
+                                <Setter Property="BoxShadow" Value="0 2 8 0 #15000000"/>
+                                <Setter Property="Margin" Value="0,0,15,0"/>
+                            </Style>
+                        </Grid.Styles>
+
+                        <Border Grid.Column="0">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Total Personas" 
+                                           FontSize="12" 
+                                           Foreground="#666"/>
+                                <TextBlock Text="0" 
+                                           FontSize="32" 
+                                           FontWeight="Bold"
+                                           Foreground="#2196F3"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Familias" 
+                                           FontSize="12" 
+                                           Foreground="#666"/>
+                                <TextBlock Text="0" 
+                                           FontSize="32" 
+                                           FontWeight="Bold"
+                                           Foreground="#4CAF50"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Ingresos (Mes)" 
+                                           FontSize="12" 
+                                           Foreground="#666"/>
+                                <TextBlock Text="L 0.00" 
+                                           FontSize="32" 
+                                           FontWeight="Bold"
+                                           Foreground="#FF9800"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="3">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Egresos (Mes)" 
+                                           FontSize="12" 
+                                           Foreground="#666"/>
+                                <TextBlock Text="L 0.00" 
+                                           FontSize="32" 
+                                           FontWeight="Bold"
+                                           Foreground="#F44336"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Información del Sistema -->
+                    <Border Background="White" 
+                            Padding="25" 
+                            CornerRadius="8"
+                            BoxShadow="0 2 8 0 #15000000">
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="Bienvenido al Sistema" 
+                                       FontSize="18" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#212121"/>
+                            
+                            <TextBlock TextWrapping="Wrap" 
+                                       Foreground="#616161"
+                                       LineHeight="24"
+                                       FontSize="14">
+                                Sistema en desarrollo activo. Las vistas de gestión están siendo implementadas.
+                            </TextBlock>
+
+                            <Border Background="#E3F2FD" 
+                                    Padding="15" 
+                                    CornerRadius="5">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="CRUD en progreso" 
+                                               FontWeight="SemiBold"
+                                               FontSize="14"
+                                               Foreground="#1976D2"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Barra Inferior -->
+        <Border Grid.Row="2" 
+                Background="#F5F5F5" 
+                BorderBrush="#E0E0E0" 
+                BorderThickness="0,1,0,0"
+                Padding="20,10">
+            <Grid>
+                <TextBlock Text="Sistema Comunitario Integral v1.0.0" 
+                           FontSize="11" 
+                           Foreground="#757575"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="© 2026 Todos los derechos reservados. - Departamento de Desarrollo de Tecnologico / Servicios Contables de Occidente." 
+                           FontSize="11" 
+                           Foreground="#757575"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</Window>

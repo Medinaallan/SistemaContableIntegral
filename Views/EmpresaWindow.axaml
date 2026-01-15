@@ -1,0 +1,266 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SistemaComunidad.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+        x:Class="SistemaComunidad.Views.EmpresaWindow"
+        x:DataType="vm:EmpresaViewModel"
+        Title="Mi Empresa - Datos de la Organización"
+        Width="900" Height="700"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:EmpresaViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Encabezado -->
+        <Border Grid.Row="0" 
+                Background="#2196F3" 
+                Padding="20" 
+                CornerRadius="8"
+                Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="Mi Empresa" 
+                           FontSize="28" 
+                           FontWeight="Bold"
+                           Foreground="White"/>
+                <TextBlock Text="Información de la organización" 
+                           FontSize="14" 
+                           Foreground="White"
+                           Opacity="0.9"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Contenido del Formulario -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="20" MaxWidth="800">
+                
+                <!-- Mensaje de estado -->
+                <Border IsVisible="{Binding Mensaje, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        Background="#E8F5E9"
+                        BorderBrush="#66BB6A"
+                        BorderThickness="1"
+                        Padding="15"
+                        CornerRadius="5">
+                    <TextBlock Text="{Binding Mensaje}" 
+                               Foreground="#2E7D32"
+                               TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Datos Principales -->
+                <Border Background="White" 
+                        Padding="20" 
+                        CornerRadius="8"
+                        BoxShadow="0 2 8 0 #15000000">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Datos Principales" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#333333"
+                                   Margin="0,0,0,10"/>
+
+                        <!-- Razón Social -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Razón Social *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding RazonSocial}" 
+                                     Watermark="Ingrese la razón social"
+                                     FontSize="14"
+                                     Padding="10"/>
+                        </StackPanel>
+
+                        <!-- Nombre Comercial -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Nombre Comercial *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding NombreComercial}" 
+                                     Watermark="Ingrese el nombre comercial"
+                                     FontSize="14"
+                                     Padding="10"/>
+                        </StackPanel>
+
+                        <!-- RTN -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="RTN (Registro Tributario Nacional) *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding Rtn}" 
+                                     Watermark="Ingrese el RTN"
+                                     FontSize="14"
+                                     Padding="10"
+                                     MaxLength="20"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Datos de Contacto -->
+                <Border Background="White" 
+                        Padding="20" 
+                        CornerRadius="8"
+                        BoxShadow="0 2 8 0 #15000000">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Datos de Contacto" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#333333"
+                                   Margin="0,0,0,10"/>
+
+                        <!-- Número de Teléfono -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Número de Teléfono *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding NumeroTelefono}" 
+                                     Watermark="Ej: +504 0000-0000"
+                                     FontSize="14"
+                                     Padding="10"
+                                     MaxLength="20"/>
+                        </StackPanel>
+
+                        <!-- Correo Electrónico -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Correo Electrónico *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding CorreoElectronico}" 
+                                     Watermark="correo@ejemplo.com"
+                                     FontSize="14"
+                                     Padding="10"/>
+                        </StackPanel>
+
+                        <!-- Dirección -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Dirección *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding Direccion}" 
+                                     Watermark="Ingrese la dirección completa"
+                                     FontSize="14"
+                                     Padding="10"
+                                     AcceptsReturn="True"
+                                     Height="80"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Datos del Representante (Opcional) -->
+                <Border Background="White" 
+                        Padding="20" 
+                        CornerRadius="8"
+                        BoxShadow="0 2 8 0 #15000000">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Datos del Representante (Opcional)" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#333333"
+                                   Margin="0,0,0,10"/>
+
+                        <!-- Representante -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Nombre del Representante" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding Representante}" 
+                                     Watermark="Nombre completo del representante"
+                                     FontSize="14"
+                                     Padding="10"/>
+                        </StackPanel>
+
+                        <!-- Teléfono del Representante -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Teléfono del Representante" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <TextBox Text="{Binding TelefonoRepresentante}" 
+                                     Watermark="Teléfono de contacto"
+                                     FontSize="14"
+                                     Padding="10"
+                                     MaxLength="20"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Nota sobre campos requeridos -->
+                <TextBlock Text="* Campos obligatorios" 
+                           FontSize="12"
+                           Foreground="#666666"
+                           FontStyle="Italic"
+                           Margin="5,0,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Botones de Acción -->
+        <Border Grid.Row="2" 
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,1,0,0"
+                Padding="0,20,0,0"
+                Margin="0,20,0,0">
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Right"
+                        Spacing="10">
+                
+                <Button Content="Guardar"
+                        Command="{Binding GuardarCommand}"
+                        IsEnabled="{Binding !EstaCargando}"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        Padding="25,12"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        CornerRadius="5"
+                        Cursor="Hand">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="Background" Value="#45a049"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+
+                <Button Content="Cerrar"
+                        Click="OnCerrarClick"
+                        Background="#757575"
+                        Foreground="White"
+                        Padding="25,12"
+                        FontSize="14"
+                        CornerRadius="5"
+                        Cursor="Hand">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="Background" Value="#616161"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Indicador de carga -->
+        <Border Grid.Row="0" Grid.RowSpan="3"
+                IsVisible="{Binding EstaCargando}"
+                Background="#80000000">
+            <Border Background="White"
+                    Padding="30"
+                    CornerRadius="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Spacing="15" HorizontalAlignment="Center">
+                    <TextBlock Text="⏳" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Procesando..." 
+                               FontSize="16"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</Window>
