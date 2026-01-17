@@ -11,7 +11,7 @@ public class Persona : BaseEntity
     public string Nombres { get; set; } = string.Empty;
     public string Apellidos { get; set; } = string.Empty;
     public string? IdentidadNacional { get; set; } // DNI/RTN en Honduras
-    public DateTime? FechaNacimiento { get; set; }
+    public DateTimeOffset? FechaNacimiento { get; set; }
     public string? Telefono { get; set; }
     public string? Email { get; set; }
     public string? Direccion { get; set; }

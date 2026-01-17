@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -18,15 +19,25 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        var logFile = Path.Combine(AppContext.BaseDirectory, "error_log.txt");
         try
         {
+            File.WriteAllText(logFile, "Iniciando aplicación...\n");
             ConfigurarServicios();
+            File.AppendAllText(logFile, "Servicios configurados\n");
             InicializarBaseDatos();
+            File.AppendAllText(logFile, "Base de datos inicializada\n");
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al iniciar la aplicación: {ex.Message}");
+            var errorMsg = $"Error: {ex.Message}\nStackTrace: {ex.StackTrace}\n";
+            if (ex.InnerException != null)
+            {
+                errorMsg += $"Inner Exception: {ex.InnerException.Message}\n";
+            }
+            File.WriteAllText(logFile, errorMsg);
+            Console.WriteLine(errorMsg);
             throw;
         }
     }
@@ -59,6 +70,7 @@ class Program
         // Servicios
         services.AddScoped<IAutenticacionService, AutenticacionService>();
         services.AddScoped<IEmpresaService, EmpresaService>();
+        services.AddScoped<IPersonaService, PersonaService>();
 
         Services = services.BuildServiceProvider();
     }

@@ -1,0 +1,350 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SistemaComunidad.ViewModels"
+        xmlns:views="using:SistemaComunidad.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+        x:Class="SistemaComunidad.Views.PersonasWindow"
+        x:DataType="vm:PersonasViewModel"
+        Title="Gestión de Personas"
+        Width="1200" Height="700"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="True"
+        Background="#F5F5F5">
+
+    <Design.DataContext>
+        <vm:PersonasViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Panel Izquierdo - Lista de Personas -->
+        <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Encabezado -->
+                <Border Grid.Row="0" Background="#2196F3" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Personas" 
+                                   FontSize="24" 
+                                   FontWeight="Bold"
+                                   Foreground="White"/>
+                        <TextBlock Text="Gestión de miembros de la comunidad" 
+                                   FontSize="12" 
+                                   Foreground="White"
+                                   Opacity="0.9"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Búsqueda -->
+                <Border Grid.Row="1" Padding="15" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+                    <StackPanel Spacing="10">
+                        <TextBox Text="{Binding TextoBusqueda}" 
+                                 Watermark="Buscar por nombre, apellido o identidad..."
+                                 Padding="10"
+                                 FontSize="13"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Content="Buscar" 
+                                    Command="{Binding BuscarCommand}"
+                                    Background="#2196F3"
+                                    Foreground="White"
+                                    Padding="20,8"
+                                    FontSize="13"
+                                    CornerRadius="4"
+                                    BorderThickness="0"/>
+                            <Button Content="Nuevo" 
+                                    Command="{Binding NuevoRegistroCommand}"
+                                    Background="#4CAF50"
+                                    Foreground="White"
+                                    Padding="20,8"
+                                    FontSize="13"
+                                    CornerRadius="4"
+                                    BorderThickness="0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Lista de Personas -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Personas}" Padding="10">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White" 
+                                        Padding="15" 
+                                        Margin="5"
+                                        CornerRadius="6"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        Cursor="Hand">
+                                    <Border.Styles>
+                                        <Style Selector="Border:pointerover">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="BorderBrush" Value="#2196F3"/>
+                                        </Style>
+                                    </Border.Styles>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="#212121">
+                                                <Run Text="{Binding Nombres}"/>
+                                                <Run Text=" "/>
+                                                <Run Text="{Binding Apellidos}"/>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding IdentidadNacional, StringFormat='ID: {0}'}" 
+                                                       FontSize="12" 
+                                                       Foreground="#666"
+                                                       IsVisible="{Binding IdentidadNacional, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                            <TextBlock Text="{Binding Telefono}" 
+                                                       FontSize="12" 
+                                                       Foreground="#666"
+                                                       IsVisible="{Binding Telefono, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                                            <Button Content="✏️" 
+                                                    Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).EditarPersonaCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Padding="8"
+                                                    FontSize="16"
+                                                    ToolTip.Tip="Editar"/>
+                                            <Button Content="🗑️" 
+                                                    Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).EliminarCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Padding="8"
+                                                    FontSize="16"
+                                                    ToolTip.Tip="Eliminar"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Botón Cerrar -->
+                <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="15">
+                    <Button Content="Cerrar" 
+                            Click="OnCerrarClick"
+                            Background="#9E9E9E"
+                            Foreground="White"
+                            Padding="20,10"
+                            FontSize="13"
+                            CornerRadius="4"
+                            HorizontalAlignment="Stretch"
+                            BorderThickness="0"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Panel Derecho - Formulario -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado del Formulario -->
+            <Border Grid.Row="0" Background="#2196F3" Padding="20">
+                <TextBlock Text="Datos de la Persona"
+                           FontSize="22" 
+                           FontWeight="SemiBold"
+                           Foreground="White"/>
+            </Border>
+
+            <!-- Contenido del Formulario -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="30,20" IsVisible="{Binding ModoEdicion}">
+                <StackPanel Spacing="20" MaxWidth="600">
+
+                    <!-- Mensaje -->
+                    <Border IsVisible="{Binding Mensaje, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Background="#E8F5E9"
+                            BorderBrush="#66BB6A"
+                            BorderThickness="1"
+                            Padding="12"
+                            CornerRadius="4">
+                        <TextBlock Text="{Binding Mensaje}" 
+                                   Foreground="#2E7D32"
+                                   TextWrapping="Wrap"
+                                   FontSize="13"/>
+                    </Border>
+
+                    <!-- Nombres -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Nombres *" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding Nombres}" 
+                                 Watermark="Ingrese los nombres"
+                                 Padding="10"
+                                 FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Apellidos -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Apellidos *" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding Apellidos}" 
+                                 Watermark="Ingrese los apellidos"
+                                 Padding="10"
+                                 FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Identidad Nacional -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Identidad Nacional" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding IdentidadNacional}" 
+                                 Watermark="Número de identidad"
+                                 Padding="10"
+                                 FontSize="14"
+                                 MaxLength="20"/>
+                    </StackPanel>
+
+                    <!-- Fecha de Nacimiento -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Fecha de Nacimiento" FontSize="13" Foreground="#555"/>
+                        <DatePicker SelectedDate="{Binding FechaNacimiento}"
+                                    Padding="10"
+                                    FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Teléfono -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Teléfono" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding Telefono}" 
+                                 Watermark="+504 0000-0000"
+                                 Padding="10"
+                                 FontSize="14"
+                                 MaxLength="20"/>
+                    </StackPanel>
+
+                    <!-- Email -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Correo Electrónico" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding Email}" 
+                                 Watermark="correo@ejemplo.com"
+                                 Padding="10"
+                                 FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Dirección -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Dirección" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding Direccion}" 
+                                 Watermark="Dirección completa"
+                                 Padding="10"
+                                 FontSize="14"
+                                 AcceptsReturn="True"
+                                 Height="60"
+                                 TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Estado de Participación -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Estado de Participación" FontSize="13" Foreground="#555"/>
+                        <ComboBox SelectedItem="{Binding EstadoParticipacion}"
+                                  ItemsSource="{x:Static views:EstadoParticipacionValues.Values}"
+                                  Padding="10"
+                                  FontSize="14"
+                                  HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+
+                    <!-- Notas -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Notas" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding Notas}" 
+                                 Watermark="Observaciones adicionales"
+                                 Padding="10"
+                                 FontSize="14"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Botones -->
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,20">
+                        <Button Content="Guardar"
+                                Command="{Binding GuardarCommand}"
+                                IsEnabled="{Binding !EstaCargando}"
+                                Background="#4CAF50"
+                                Foreground="White"
+                                Padding="25,10"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                CornerRadius="4"
+                                BorderThickness="0"/>
+                        <Button Content="Cancelar"
+                                Command="{Binding CancelarEdicionCommand}"
+                                Background="#9E9E9E"
+                                Foreground="White"
+                                Padding="25,10"
+                                FontSize="14"
+                                CornerRadius="4"
+                                BorderThickness="0"/>
+                    </StackPanel>
+
+                    <TextBlock Text="* Campos obligatorios" 
+                               FontSize="11"
+                               Foreground="#666"
+                               FontStyle="Italic"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Vista Vacía -->
+            <Border Grid.Row="1" IsVisible="{Binding !ModoEdicion}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
+                    <TextBlock Text="📋" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
+                    <TextBlock Text="Seleccione una persona o cree una nueva" 
+                               FontSize="16"
+                               Foreground="#999"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Indicador de Carga -->
+        <Border Grid.Column="0" Grid.ColumnSpan="2"
+                IsVisible="{Binding EstaCargando}"
+                Background="#CC000000">
+            <Border Background="White"
+                    Padding="40"
+                    CornerRadius="8"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BoxShadow="0 4 20 0 #40000000">
+                <StackPanel Spacing="20" HorizontalAlignment="Center">
+                    <Border Width="50" Height="50"
+                            Background="#2196F3"
+                            CornerRadius="25"
+                            HorizontalAlignment="Center">
+                        <TextBlock Text="⏳" 
+                                   FontSize="28" 
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Cargando..." 
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#424242"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</Window>

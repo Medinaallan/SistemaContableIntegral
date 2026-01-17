@@ -104,20 +104,38 @@
                     <Button Command="{Binding IniciarSesionCommand}"
                             IsEnabled="{Binding !EstaAutenticando}"
                             HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Padding="0,12"
-                            FontSize="15"
-                            FontWeight="SemiBold"
-                            Background="#2196F3"
-                            Foreground="White"
-                            CornerRadius="5"
+                            Padding="0"
+                            Background="Transparent"
+                            BorderThickness="0"
                             Cursor="Hand">
-                        <Panel>
-                            <TextBlock Text="Iniciar Sesión" 
-                                       IsVisible="{Binding !EstaAutenticando}"/>
-                            <TextBlock Text="Autenticando..." 
-                                       IsVisible="{Binding EstaAutenticando}"/>
-                        </Panel>
+                        <Border Background="#2196F3"
+                                CornerRadius="5"
+                                Padding="0,12">
+                            <Border.Styles>
+                                <Style Selector="Border">
+                                    <Setter Property="Background" Value="#2196F3"/>
+                                </Style>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="Background" Value="#1976D2"/>
+                                </Style>
+                            </Border.Styles>
+                            <Panel>
+                                <TextBlock Text="Iniciar Sesión" 
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding !EstaAutenticando}"/>
+                                <TextBlock Text="Autenticando..." 
+                                           Foreground="White"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding EstaAutenticando}"/>
+                            </Panel>
+                        </Border>
                     </Button>
 
                     <!-- Información de credenciales -->

@@ -8,13 +8,16 @@
         x:DataType="vm:EmpresaViewModel"
         Title="Mi Empresa - Datos de la Organización"
         Width="900" Height="700"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="True"
+        Background="#F5F5F5">
 
     <Design.DataContext>
         <vm:EmpresaViewModel/>
     </Design.DataContext>
 
-    <Grid Margin="20">
+    <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -24,9 +27,8 @@
         <!-- Encabezado -->
         <Border Grid.Row="0" 
                 Background="#2196F3" 
-                Padding="20" 
-                CornerRadius="8"
-                Margin="0,0,0,20">
+                Padding="30,25" 
+                CornerRadius="0">
             <StackPanel>
                 <TextBlock Text="Mi Empresa" 
                            FontSize="28" 
@@ -41,8 +43,8 @@
         </Border>
 
         <!-- Contenido del Formulario -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Spacing="20" MaxWidth="800">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="30,20,30,30">
+            <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Center" Margin="0,0,0,20">
                 
                 <!-- Mensaje de estado -->
                 <Border IsVisible="{Binding Mensaje, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
@@ -197,48 +199,53 @@
                            FontSize="12"
                            Foreground="#666666"
                            FontStyle="Italic"
-                           Margin="5,0,0,0"/>
+                           Margin="5,0,0,20"/>
             </StackPanel>
         </ScrollViewer>
 
         <!-- Botones de Acción -->
         <Border Grid.Row="2" 
+                Background="White"
                 BorderBrush="#E0E0E0"
                 BorderThickness="0,1,0,0"
-                Padding="0,20,0,0"
-                Margin="0,20,0,0">
+                Padding="30,20">
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Right"
-                        Spacing="10">
+                        Spacing="15">
                 
                 <Button Content="Guardar"
                         Command="{Binding GuardarCommand}"
                         IsEnabled="{Binding !EstaCargando}"
                         Background="#4CAF50"
                         Foreground="White"
-                        Padding="25,12"
+                        Padding="30,12"
                         FontSize="14"
                         FontWeight="SemiBold"
                         CornerRadius="5"
-                        Cursor="Hand">
+                        Cursor="Hand"
+                        BorderThickness="0">
                     <Button.Styles>
                         <Style Selector="Button:pointerover">
                             <Setter Property="Background" Value="#45a049"/>
+                        </Style>
+                        <Style Selector="Button:disabled">
+                            <Setter Property="Opacity" Value="0.5"/>
                         </Style>
                     </Button.Styles>
                 </Button>
 
                 <Button Content="Cerrar"
                         Click="OnCerrarClick"
-                        Background="#757575"
+                        Background="#9E9E9E"
                         Foreground="White"
-                        Padding="25,12"
+                        Padding="30,12"
                         FontSize="14"
                         CornerRadius="5"
-                        Cursor="Hand">
+                        Cursor="Hand"
+                        BorderThickness="0">
                     <Button.Styles>
                         <Style Selector="Button:pointerover">
-                            <Setter Property="Background" Value="#616161"/>
+                            <Setter Property="Background" Value="#757575"/>
                         </Style>
                     </Button.Styles>
                 </Button>
@@ -248,16 +255,27 @@
         <!-- Indicador de carga -->
         <Border Grid.Row="0" Grid.RowSpan="3"
                 IsVisible="{Binding EstaCargando}"
-                Background="#80000000">
+                Background="#CC000000">
             <Border Background="White"
-                    Padding="30"
-                    CornerRadius="10"
+                    Padding="40"
+                    CornerRadius="8"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                <StackPanel Spacing="15" HorizontalAlignment="Center">
-                    <TextBlock Text="⏳" FontSize="48" HorizontalAlignment="Center"/>
+                    VerticalAlignment="Center"
+                    BoxShadow="0 4 20 0 #40000000">
+                <StackPanel Spacing="20" HorizontalAlignment="Center">
+                    <Border Width="50" Height="50"
+                            Background="#2196F3"
+                            CornerRadius="25"
+                            HorizontalAlignment="Center">
+                        <TextBlock Text="⏳" 
+                                   FontSize="28" 
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
                     <TextBlock Text="Procesando..." 
                                FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#424242"
                                HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>

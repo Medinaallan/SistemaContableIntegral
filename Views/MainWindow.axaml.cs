@@ -29,7 +29,20 @@ namespace SistemaComunidad.Views
 
         private void Personas_Click(object? sender, RoutedEventArgs e)
         {
-            ShowMessage("Personas", "Gestión de Personas - En desarrollo");
+            try
+            {
+                var personaService = Program.Services?.GetRequiredService<IPersonaService>();
+                if (personaService != null)
+                {
+                    var viewModel = new PersonasViewModel(personaService);
+                    var window = new PersonasWindow(viewModel);
+                    window.ShowDialog(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage("Error", $"No se pudo abrir Personas: {ex.Message}");
+            }
         }
 
         private void Familias_Click(object? sender, RoutedEventArgs e)
@@ -67,7 +80,7 @@ namespace SistemaComunidad.Views
             ShowMessage("Bienes", "Inventario de Bienes - En desarrollo");
         }
 
-        private void MiEmpresa_Click(object? sender, RoutedEventArgs e)
+        private async void MiEmpresa_Click(object? sender, RoutedEventArgs e)
         {
             try
             {
@@ -76,7 +89,7 @@ namespace SistemaComunidad.Views
                 {
                     var viewModel = new EmpresaViewModel(empresaService);
                     var window = new EmpresaWindow(viewModel);
-                    window.Show();
+                    await window.ShowDialog(this);
                 }
             }
             catch (Exception ex)

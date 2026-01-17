@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaComunidad.Data.Context;
 
@@ -11,9 +12,11 @@ using SistemaComunidad.Data.Context;
 namespace SistemaComunidad.Migrations
 {
     [DbContext(typeof(SistemaComunidadDbContext))]
-    partial class SistemaComunidadDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260116173347_ActualizarModelo")]
+    partial class ActualizarModelo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

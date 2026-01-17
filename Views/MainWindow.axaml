@@ -15,6 +15,16 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
+    <Window.Styles>
+        <!-- Estilos globales para botones del menú -->
+        <Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}"/>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}"/>
+        </Style>
+    </Window.Styles>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -53,7 +63,19 @@
                             Padding="15,8"
                             CornerRadius="4"
                             FontSize="12"
-                            Click="CerrarSesion_Click"/>
+                            BorderThickness="0"
+                            Click="CerrarSesion_Click">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#1565C0"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                            <Style Selector="Button:pressed">
+                                <Setter Property="Background" Value="#0D47A1"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>
