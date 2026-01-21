@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -65,12 +66,14 @@ class Program
         services.AddScoped<IPersonaRepositorio, PersonaRepositorio>();
         services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
         services.AddScoped<IEmpresaRepositorio, EmpresaRepositorio>();
+        services.AddScoped<IServicioRepositorio, ServicioRepositorio>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Servicios
         services.AddScoped<IAutenticacionService, AutenticacionService>();
         services.AddScoped<IEmpresaService, EmpresaService>();
         services.AddScoped<IPersonaService, PersonaService>();
+        services.AddScoped<IServicioService, ServicioService>();
 
         Services = services.BuildServiceProvider();
     }
@@ -82,14 +85,36 @@ class Program
         
         try
         {
-            // Aplicar migraciones pendientes
-            context.Database.Migrate();
-            Console.WriteLine("Base de datos inicializada correctamente");
+            // Verificar si la base de datos existe y puede conectarse
+            if (context.Database.CanConnect())
+            {
+                Console.WriteLine("Conexión a la base de datos establecida correctamente");
+                
+                // Intentar aplicar migraciones pendientes solo si es necesario
+                var pendingMigrations = context.Database.GetPendingMigrations();
+                if (pendingMigrations.Any())
+                {
+                    Console.WriteLine($"Hay {pendingMigrations.Count()} migraciones pendientes. Intentando aplicarlas...");
+                    context.Database.Migrate();
+                    Console.WriteLine("Migraciones aplicadas correctamente");
+                }
+                else
+                {
+                    Console.WriteLine("No hay migraciones pendientes. Base de datos actualizada.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Creando base de datos...");
+                context.Database.Migrate();
+                Console.WriteLine("Base de datos creada correctamente");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al inicializar la base de datos: {ex.Message}");
-            throw;
+            Console.WriteLine($"Advertencia al inicializar la base de datos: {ex.Message}");
+            Console.WriteLine("La aplicación continuará ejecutándose. Si hay problemas, verifique la conexión a la base de datos.");
+            // No lanzar la excepción para permitir que la aplicación continúe
         }
     }
 }

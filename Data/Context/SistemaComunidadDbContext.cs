@@ -22,6 +22,7 @@ public class SistemaComunidadDbContext : DbContext
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<AuditoriaAccion> AuditoriasAccion { get; set; }
     public DbSet<Empresa> Empresas { get; set; }
+    public DbSet<Servicio> Servicios { get; set; }
 
     public SistemaComunidadDbContext(DbContextOptions<SistemaComunidadDbContext> options) 
         : base(options)
@@ -45,6 +46,7 @@ public class SistemaComunidadDbContext : DbContext
         ConfigurarUsuario(modelBuilder);
         ConfigurarAuditoria(modelBuilder);
         ConfigurarEmpresa(modelBuilder);
+        ConfigurarServicio(modelBuilder);
 
         // Datos iniciales (seed)
         SeedDataInicial(modelBuilder);
@@ -245,6 +247,29 @@ public class SistemaComunidadDbContext : DbContext
             entity.Property(e => e.TelefonoRepresentante).HasMaxLength(20);
             
             entity.HasIndex(e => e.RTN).IsUnique();
+        });
+    }
+
+    private void ConfigurarServicio(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Servicio>(entity =>
+        {
+            entity.ToTable("Servicios");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Descripcion).HasMaxLength(500);
+            entity.Property(e => e.CostoMensual).HasColumnType("decimal(18,2)").IsRequired();
+            entity.Property(e => e.Periodicidad).IsRequired();
+            entity.Property(e => e.EsObligatorio).IsRequired();
+            entity.Property(e => e.Notas).HasMaxLength(500);
+            
+            entity.HasOne(e => e.Empresa)
+                  .WithMany()
+                  .HasForeignKey(e => e.EmpresaId)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(e => e.Nombre);
+            entity.HasIndex(e => e.EmpresaId);
         });
     }
 

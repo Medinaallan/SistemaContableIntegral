@@ -98,6 +98,28 @@ namespace SistemaComunidad.Views
             }
         }
 
+        private async void Servicios_Click(object? sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var servicioService = Program.Services?.GetRequiredService<IServicioService>();
+                var empresaService = Program.Services?.GetRequiredService<IEmpresaService>();
+                if (servicioService != null && empresaService != null)
+                {
+                    var viewModel = new ServiciosViewModel(servicioService, empresaService);
+                    var window = new ServiciosWindow
+                    {
+                        DataContext = viewModel
+                    };
+                    await window.ShowDialog(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage("Error", $"No se pudo abrir Servicios: {ex.Message}");
+            }
+        }
+
         private async void ShowMessage(string title, string message)
         {
             var dialog = new Window
