@@ -15,6 +15,8 @@ namespace SistemaComunidad.ViewModels;
 public partial class PersonasViewModel : ViewModelBase
 {
     private readonly IPersonaService _personaService;
+    private readonly IPersonaServicioService _personaServicioService;
+    private readonly IServicioService _servicioService;
 
     [ObservableProperty]
     private ObservableCollection<Persona> _personas = new();
@@ -68,9 +70,20 @@ public partial class PersonasViewModel : ViewModelBase
     [ObservableProperty]
     private string? _notas;
 
-    public PersonasViewModel(IPersonaService personaService)
+    [ObservableProperty]
+    private ObservableCollection<PersonaServicio> _serviciosAsignados = new();
+
+    [ObservableProperty]
+    private ObservableCollection<Servicio> _serviciosDisponibles = new();
+
+    [ObservableProperty]
+    private bool _mostrarServicios;
+
+    public PersonasViewModel(IPersonaService personaService, IPersonaServicioService personaServicioService, IServicioService servicioService)
     {
         _personaService = personaService;
+        _personaServicioService = personaServicioService;
+        _servicioService = servicioService;
     }
 
     public async Task InicializarAsync()
@@ -139,7 +152,130 @@ public partial class PersonasViewModel : ViewModelBase
         PersonaSeleccionada = persona;
         CargarDatosFormulario(persona);
         ModoEdicion = true;
+        MostrarServicios = false;
         Mensaje = "Modifique los datos necesarios";
+    }
+
+    [RelayCommand]
+    private async Task VerServiciosAsync(Persona? persona)
+    {
+        if (persona == null) return;
+
+        try
+        {
+            EstaCargando = true;
+            PersonaSeleccionada = persona;
+            CargarDatosFormulario(persona);
+            
+            // Cargar servicios asignados
+            var servicios = await _personaServicioService.ObtenerServiciosPorPersonaAsync(persona.Id);
+            ServiciosAsignados = new ObservableCollection<PersonaServicio>(servicios);
+            
+            // Cargar servicios disponibles
+            var todosServicios = await _servicioService.ObtenerServiciosActivosAsync();
+            ServiciosDisponibles = new ObservableCollection<Servicio>(todosServicios);
+            
+            ModoEdicion = false;
+            MostrarServicios = true;
+            Mensaje = $"Servicios de {persona.Nombres} {persona.Apellidos}";
+        }
+        catch (Exception ex)
+        {
+            HayError = true;
+            Mensaje = $"Error al cargar servicios: {ex.Message}";
+        }
+        finally
+        {
+            EstaCargando = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task AsignarServicioAsync(Servicio? servicio)
+    {
+        if (servicio == null || PersonaSeleccionada == null) return;
+
+        try
+        {
+            EstaCargando = true;
+            HayError = false;
+
+            await _personaServicioService.AsignarServicioAPersonaAsync(
+                PersonaSeleccionada.Id,
+                servicio.Id);
+
+            Mensaje = $"✓ Servicio '{servicio.Nombre}' asignado exitosamente";
+            
+            // Recargar servicios
+            await VerServiciosAsync(PersonaSeleccionada);
+        }
+        catch (Exception ex)
+        {
+            HayError = true;
+            Mensaje = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            EstaCargando = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task DesactivarServicioAsync(PersonaServicio? personaServicio)
+    {
+        if (personaServicio == null || PersonaSeleccionada == null) return;
+
+        try
+        {
+            EstaCargando = true;
+            HayError = false;
+
+            await _personaServicioService.DesasignarServicioDePersonaAsync(
+                personaServicio.PersonaId,
+                personaServicio.ServicioId);
+
+            Mensaje = $"✓ Servicio desactivado exitosamente";
+            
+            // Recargar servicios
+            await VerServiciosAsync(PersonaSeleccionada);
+        }
+        catch (Exception ex)
+        {
+            HayError = true;
+            Mensaje = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            EstaCargando = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task ReactivarServicioAsync(PersonaServicio? personaServicio)
+    {
+        if (personaServicio == null || PersonaSeleccionada == null) return;
+
+        try
+        {
+            EstaCargando = true;
+            HayError = false;
+
+            await _personaServicioService.ReactivarServicioAsync(personaServicio.Id);
+
+            Mensaje = $"✓ Servicio reactivado exitosamente";
+            
+            // Recargar servicios
+            await VerServiciosAsync(PersonaSeleccionada);
+        }
+        catch (Exception ex)
+        {
+            HayError = true;
+            Mensaje = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            EstaCargando = false;
+        }
     }
 
     [RelayCommand]
@@ -217,6 +353,7 @@ public partial class PersonasViewModel : ViewModelBase
     private void CancelarEdicion()
     {
         ModoEdicion = false;
+        MostrarServicios = false;
         LimpiarFormulario();
         PersonaSeleccionada = null;
         Mensaje = string.Empty;

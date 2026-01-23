@@ -67,6 +67,9 @@ class Program
         services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
         services.AddScoped<IEmpresaRepositorio, EmpresaRepositorio>();
         services.AddScoped<IServicioRepositorio, ServicioRepositorio>();
+        services.AddScoped<IPersonaServicioRepositorio, PersonaServicioRepositorio>();
+        services.AddScoped<ICobroRepositorio, CobroRepositorio>();
+        services.AddScoped<IPagoRepositorio, PagoRepositorio>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Servicios
@@ -74,6 +77,8 @@ class Program
         services.AddScoped<IEmpresaService, EmpresaService>();
         services.AddScoped<IPersonaService, PersonaService>();
         services.AddScoped<IServicioService, ServicioService>();
+        services.AddScoped<IPersonaServicioService, PersonaServicioService>();
+        services.AddScoped<ICobroService, CobroService>();
 
         Services = services.BuildServiceProvider();
     }

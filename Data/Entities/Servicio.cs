@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SistemaComunidad.Data.Entities;
 
@@ -47,6 +48,11 @@ public class Servicio : BaseEntity
     /// Relación con la empresa/patronato
     /// </summary>
     public Empresa? Empresa { get; set; }
+
+    /// <summary>
+    /// Relación con las personas que tienen asignado este servicio
+    /// </summary>
+    public ICollection<PersonaServicio> PersonaServicios { get; set; } = new List<PersonaServicio>();
 }
 
 /// <summary>

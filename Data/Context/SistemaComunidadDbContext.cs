@@ -23,6 +23,10 @@ public class SistemaComunidadDbContext : DbContext
     public DbSet<AuditoriaAccion> AuditoriasAccion { get; set; }
     public DbSet<Empresa> Empresas { get; set; }
     public DbSet<Servicio> Servicios { get; set; }
+    public DbSet<PersonaServicio> PersonaServicios { get; set; }
+    public DbSet<Cobro> Cobros { get; set; }
+    public DbSet<CobroDetalle> CobroDetalles { get; set; }
+    public DbSet<Pago> Pagos { get; set; }
 
     public SistemaComunidadDbContext(DbContextOptions<SistemaComunidadDbContext> options) 
         : base(options)
@@ -47,6 +51,10 @@ public class SistemaComunidadDbContext : DbContext
         ConfigurarAuditoria(modelBuilder);
         ConfigurarEmpresa(modelBuilder);
         ConfigurarServicio(modelBuilder);
+        ConfigurarPersonaServicio(modelBuilder);
+        ConfigurarCobro(modelBuilder);
+        ConfigurarCobroDetalle(modelBuilder);
+        ConfigurarPago(modelBuilder);
 
         // Datos iniciales (seed)
         SeedDataInicial(modelBuilder);
@@ -270,6 +278,131 @@ public class SistemaComunidadDbContext : DbContext
 
             entity.HasIndex(e => e.Nombre);
             entity.HasIndex(e => e.EmpresaId);
+        });
+    }
+
+    private void ConfigurarPersonaServicio(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PersonaServicio>(entity =>
+        {
+            entity.ToTable("PersonaServicios");
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.FechaInicio).IsRequired();
+            entity.Property(e => e.EstaActivo).IsRequired();
+            entity.Property(e => e.CostoPersonalizado).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Notas).HasMaxLength(500);
+            
+            // Relación con Persona
+            entity.HasOne(e => e.Persona)
+                  .WithMany(p => p.PersonaServicios)
+                  .HasForeignKey(e => e.PersonaId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            
+            // Relación con Servicio
+            entity.HasOne(e => e.Servicio)
+                  .WithMany(s => s.PersonaServicios)
+                  .HasForeignKey(e => e.ServicioId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            
+            // Índices para búsquedas eficientes
+            entity.HasIndex(e => e.PersonaId);
+            entity.HasIndex(e => e.ServicioId);
+            entity.HasIndex(e => e.EstaActivo);
+            entity.HasIndex(e => new { e.PersonaId, e.ServicioId });
+        });
+    }
+
+    private void ConfigurarCobro(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Cobro>(entity =>
+        {
+            entity.ToTable("Cobros");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.NumeroRecibo).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Periodo).IsRequired();
+            entity.Property(e => e.FechaEmision).IsRequired();
+            entity.Property(e => e.FechaLimitePago).IsRequired();
+            entity.Property(e => e.MontoTotal).HasColumnType("decimal(18,2)").IsRequired();
+            entity.Property(e => e.MontoPagado).HasColumnType("decimal(18,2)").IsRequired();
+            entity.Property(e => e.Estado).IsRequired();
+            entity.Property(e => e.Observaciones).HasMaxLength(500);
+            
+            entity.HasOne(e => e.Persona)
+                  .WithMany()
+                  .HasForeignKey(e => e.PersonaId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasIndex(e => e.NumeroRecibo).IsUnique();
+            entity.HasIndex(e => e.PersonaId);
+            entity.HasIndex(e => e.Periodo);
+            entity.HasIndex(e => e.Estado);
+            entity.HasIndex(e => e.FechaLimitePago);
+        });
+    }
+
+    private void ConfigurarCobroDetalle(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CobroDetalle>(entity =>
+        {
+            entity.ToTable("CobroDetalles");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Concepto).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Cantidad).HasColumnType("decimal(18,2)").IsRequired();
+            entity.Property(e => e.PrecioUnitario).HasColumnType("decimal(18,2)").IsRequired();
+            
+            entity.HasOne(e => e.Cobro)
+                  .WithMany(c => c.Detalles)
+                  .HasForeignKey(e => e.CobroId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(e => e.Servicio)
+                  .WithMany()
+                  .HasForeignKey(e => e.ServicioId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(e => e.PersonaServicio)
+                  .WithMany()
+                  .HasForeignKey(e => e.PersonaServicioId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasIndex(e => e.CobroId);
+            entity.HasIndex(e => e.ServicioId);
+        });
+    }
+
+    private void ConfigurarPago(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Pago>(entity =>
+        {
+            entity.ToTable("Pagos");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.NumeroReciboPago).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.FechaPago).IsRequired();
+            entity.Property(e => e.Monto).HasColumnType("decimal(18,2)").IsRequired();
+            entity.Property(e => e.MetodoPago).IsRequired();
+            entity.Property(e => e.NumeroReferencia).HasMaxLength(100);
+            entity.Property(e => e.Observaciones).HasMaxLength(500);
+            
+            entity.HasOne(e => e.Cobro)
+                  .WithMany(c => c.Pagos)
+                  .HasForeignKey(e => e.CobroId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(e => e.Persona)
+                  .WithMany()
+                  .HasForeignKey(e => e.PersonaId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(e => e.Usuario)
+                  .WithMany()
+                  .HasForeignKey(e => e.UsuarioId)
+                  .OnDelete(DeleteBehavior.SetNull);
+            
+            entity.HasIndex(e => e.NumeroReciboPago).IsUnique();
+            entity.HasIndex(e => e.CobroId);
+            entity.HasIndex(e => e.PersonaId);
+            entity.HasIndex(e => e.FechaPago);
         });
     }
 

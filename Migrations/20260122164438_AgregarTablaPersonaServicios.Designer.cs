@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaComunidad.Data.Context;
 
@@ -11,9 +12,11 @@ using SistemaComunidad.Data.Context;
 namespace SistemaComunidad.Migrations
 {
     [DbContext(typeof(SistemaComunidadDbContext))]
-    partial class SistemaComunidadDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260122164438_AgregarTablaPersonaServicios")]
+    partial class AgregarTablaPersonaServicios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,120 +237,6 @@ namespace SistemaComunidad.Migrations
                         .HasFilter("[CodigoInventario] IS NOT NULL");
 
                     b.ToTable("Bienes", (string)null);
-                });
-
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.Cobro", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("EsAutomatico")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset>("FechaEmision")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("FechaLimitePago")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime?>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("MontoPagado")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MontoTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("NumeroRecibo")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Observaciones")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Periodo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PersonaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Estado");
-
-                    b.HasIndex("FechaLimitePago");
-
-                    b.HasIndex("NumeroRecibo")
-                        .IsUnique();
-
-                    b.HasIndex("Periodo");
-
-                    b.HasIndex("PersonaId");
-
-                    b.ToTable("Cobros", (string)null);
-                });
-
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.CobroDetalle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("CobroId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Concepto")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PersonaServicioId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PrecioUnitario")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ServicioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CobroId");
-
-                    b.HasIndex("PersonaServicioId");
-
-                    b.HasIndex("ServicioId");
-
-                    b.ToTable("CobroDetalles", (string)null);
                 });
 
             modelBuilder.Entity("SistemaComunidad.Data.Entities.Documento", b =>
@@ -600,76 +489,6 @@ namespace SistemaComunidad.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NucleosFamiliares", (string)null);
-                });
-
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.Pago", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CobroId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset?>("FechaImpresion")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime?>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset>("FechaPago")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("MetodoPago")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Monto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("NumeroReciboPago")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NumeroReferencia")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Observaciones")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("PersonaId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ReciboImpreso")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CobroId");
-
-                    b.HasIndex("FechaPago");
-
-                    b.HasIndex("NumeroReciboPago")
-                        .IsUnique();
-
-                    b.HasIndex("PersonaId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Pagos", (string)null);
                 });
 
             modelBuilder.Entity("SistemaComunidad.Data.Entities.ParticipacionActividad", b =>
@@ -959,70 +778,6 @@ namespace SistemaComunidad.Migrations
                     b.Navigation("Persona");
                 });
 
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.Cobro", b =>
-                {
-                    b.HasOne("SistemaComunidad.Data.Entities.Persona", "Persona")
-                        .WithMany()
-                        .HasForeignKey("PersonaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Persona");
-                });
-
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.CobroDetalle", b =>
-                {
-                    b.HasOne("SistemaComunidad.Data.Entities.Cobro", "Cobro")
-                        .WithMany("Detalles")
-                        .HasForeignKey("CobroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SistemaComunidad.Data.Entities.PersonaServicio", "PersonaServicio")
-                        .WithMany()
-                        .HasForeignKey("PersonaServicioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SistemaComunidad.Data.Entities.Servicio", "Servicio")
-                        .WithMany()
-                        .HasForeignKey("ServicioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cobro");
-
-                    b.Navigation("PersonaServicio");
-
-                    b.Navigation("Servicio");
-                });
-
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.Pago", b =>
-                {
-                    b.HasOne("SistemaComunidad.Data.Entities.Cobro", "Cobro")
-                        .WithMany("Pagos")
-                        .HasForeignKey("CobroId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SistemaComunidad.Data.Entities.Persona", "Persona")
-                        .WithMany()
-                        .HasForeignKey("PersonaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SistemaComunidad.Data.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Cobro");
-
-                    b.Navigation("Persona");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("SistemaComunidad.Data.Entities.ParticipacionActividad", b =>
                 {
                     b.HasOne("SistemaComunidad.Data.Entities.Actividad", "Actividad")
@@ -1084,13 +839,6 @@ namespace SistemaComunidad.Migrations
             modelBuilder.Entity("SistemaComunidad.Data.Entities.Actividad", b =>
                 {
                     b.Navigation("Participaciones");
-                });
-
-            modelBuilder.Entity("SistemaComunidad.Data.Entities.Cobro", b =>
-                {
-                    b.Navigation("Detalles");
-
-                    b.Navigation("Pagos");
                 });
 
             modelBuilder.Entity("SistemaComunidad.Data.Entities.NucleoFamiliar", b =>

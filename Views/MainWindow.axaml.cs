@@ -32,9 +32,12 @@ namespace SistemaComunidad.Views
             try
             {
                 var personaService = Program.Services?.GetRequiredService<IPersonaService>();
-                if (personaService != null)
+                var personaServicioService = Program.Services?.GetRequiredService<IPersonaServicioService>();
+                var servicioService = Program.Services?.GetRequiredService<IServicioService>();
+                
+                if (personaService != null && personaServicioService != null && servicioService != null)
                 {
-                    var viewModel = new PersonasViewModel(personaService);
+                    var viewModel = new PersonasViewModel(personaService, personaServicioService, servicioService);
                     var window = new PersonasWindow(viewModel);
                     window.ShowDialog(this);
                 }
@@ -50,9 +53,31 @@ namespace SistemaComunidad.Views
             ShowMessage("Familias", "Gestión de Familias - En desarrollo");
         }
 
-        private void Ingresos_Click(object? sender, RoutedEventArgs e)
+        private async void Ingresos_Click(object? sender, RoutedEventArgs e)
         {
-            ShowMessage("Ingresos", "Registro de Ingresos - En desarrollo");
+            try
+            {
+                var cobroService = Program.Services?.GetRequiredService<ICobroService>();
+                var personaService = Program.Services?.GetRequiredService<IPersonaService>();
+                
+                if (cobroService != null && personaService != null)
+                {
+                    var viewModel = new CobrosViewModel(cobroService, personaService);
+                    var window = new CobrosWindow
+                    {
+                        DataContext = viewModel
+                    };
+                    
+                    // Inicializar datos
+                    await viewModel.InicializarAsync();
+                    
+                    await window.ShowDialog(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage("Error", $"No se pudo abrir Cobros: {ex.Message}");
+            }
         }
 
         private void Egresos_Click(object? sender, RoutedEventArgs e)

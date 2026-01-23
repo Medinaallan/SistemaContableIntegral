@@ -117,22 +117,36 @@
                                         </StackPanel>
 
                                         <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
-                                            <Button Content="✏️" 
+                                            <Button Content="Editar" 
                                                     Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).EditarPersonaCommand}"
                                                     CommandParameter="{Binding}"
-                                                    Background="Transparent"
+                                                    Background="#2196F3"
+                                                    Foreground="White"
                                                     BorderThickness="0"
-                                                    Padding="8"
-                                                    FontSize="16"
-                                                    ToolTip.Tip="Editar"/>
-                                            <Button Content="🗑️" 
+                                                    Padding="10,5"
+                                                    FontSize="11"
+                                                    CornerRadius="3"
+                                                    ToolTip.Tip="Editar persona"/>
+                                            <Button Content="Servicios"
+                                                    Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).VerServiciosCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#9C27B0"
+                                                    Foreground="White"
+                                                    BorderThickness="0"
+                                                    Padding="10,5"
+                                                    FontSize="11"
+                                                    CornerRadius="3"
+                                                    ToolTip.Tip="Gestionar Servicios"/>
+                                            <Button Content="Eliminar"
                                                     Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).EliminarCommand}"
                                                     CommandParameter="{Binding}"
-                                                    Background="Transparent"
+                                                    Background="#F44336"
+                                                    Foreground="White"
                                                     BorderThickness="0"
-                                                    Padding="8"
-                                                    FontSize="16"
-                                                    ToolTip.Tip="Eliminar"/>
+                                                    Padding="10,5"
+                                                    FontSize="11"
+                                                    CornerRadius="3"
+                                                    ToolTip.Tip="Eliminar persona"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
@@ -308,13 +322,190 @@
 
             <!-- Vista Vacía -->
             <Border Grid.Row="1" IsVisible="{Binding !ModoEdicion}">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
-                    <TextBlock Text="📋" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
-                    <TextBlock Text="Seleccione una persona o cree una nueva" 
-                               FontSize="16"
-                               Foreground="#999"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
+                <Grid>
+                    <!-- Vista Vacía Predeterminada -->
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15"
+                                IsVisible="{Binding !MostrarServicios}">
+                        <TextBlock Text="📋" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
+                        <TextBlock Text="Seleccione una persona o cree una nueva" 
+                                   FontSize="16"
+                                   Foreground="#999"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Vista de Servicios -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" IsVisible="{Binding MostrarServicios}">
+                        <StackPanel Spacing="20" Margin="30,20">
+                            
+                            <!-- Mensaje -->
+                            <Border IsVisible="{Binding Mensaje, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    Background="#E8F5E9"
+                                    BorderBrush="#66BB6A"
+                                    BorderThickness="1"
+                                    Padding="12"
+                                    CornerRadius="4">
+                                <TextBlock Text="{Binding Mensaje}" 
+                                           Foreground="#2E7D32"
+                                           TextWrapping="Wrap"
+                                           FontSize="13"/>
+                            </Border>
+
+                            <!-- Información de la Persona -->
+                            <Border Background="White" Padding="20" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                                <StackPanel Spacing="10">
+                                    <TextBlock FontSize="20" FontWeight="Bold" Foreground="#212121">
+                                        <Run Text="{Binding Nombres}"/>
+                                        <Run Text=" "/>
+                                        <Run Text="{Binding Apellidos}"/>
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding IdentidadNacional, StringFormat='ID: {0}'}" 
+                                               FontSize="14" 
+                                               Foreground="#666"
+                                               IsVisible="{Binding IdentidadNacional, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Servicios Activos -->
+                            <StackPanel Spacing="15">
+                                <TextBlock Text="Servicios Activos" 
+                                           FontSize="18" 
+                                           FontWeight="SemiBold"
+                                           Foreground="#212121"/>
+                                
+                                <ItemsControl ItemsSource="{Binding ServiciosAsignados}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="White" 
+                                                    Padding="15" 
+                                                    Margin="0,0,0,10"
+                                                    CornerRadius="6"
+                                                    BorderBrush="#E0E0E0"
+                                                    BorderThickness="1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Grid.Column="0" Spacing="8">
+                                                        <TextBlock Text="{Binding Servicio.Nombre}" 
+                                                                   FontSize="16" 
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="#212121"/>
+                                                        <TextBlock Text="{Binding Servicio.Descripcion}" 
+                                                                   FontSize="13" 
+                                                                   Foreground="#666"
+                                                                   TextWrapping="Wrap"
+                                                                   IsVisible="{Binding Servicio.Descripcion, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                                        <StackPanel Orientation="Horizontal" Spacing="15">
+                                                            <TextBlock FontSize="13" Foreground="#666">
+                                                                <Run Text="Costo: L"/>
+                                                                <Run Text="{Binding Servicio.CostoMensual, StringFormat='{}{0:N2}'}"/>
+                                                            </TextBlock>
+                                                            <TextBlock Text="{Binding Servicio.Periodicidad}" 
+                                                                       FontSize="13" 
+                                                                       Foreground="#666"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                    <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                                                        <Button Content="🔴" 
+                                                                Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).DesactivarServicioCommand}"
+                                                                CommandParameter="{Binding}"
+                                                                IsVisible="{Binding EstaActivo}"
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Padding="8"
+                                                                FontSize="14"
+                                                                ToolTip.Tip="Desactivar"/>
+                                                        <Button Content="🟢" 
+                                                                Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).ReactivarServicioCommand}"
+                                                                CommandParameter="{Binding}"
+                                                                IsVisible="{Binding !EstaActivo}"
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Padding="8"
+                                                                FontSize="14"
+                                                                ToolTip.Tip="Reactivar"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <TextBlock Text="No hay servicios asignados" 
+                                           FontSize="14"
+                                           Foreground="#999"
+                                           FontStyle="Italic"
+                                           IsVisible="{Binding !ServiciosAsignados.Count}"/>
+                            </StackPanel>
+
+                            <!-- Asignar Nuevo Servicio -->
+                            <StackPanel Spacing="15">
+                                <TextBlock Text="Asignar Nuevo Servicio" 
+                                           FontSize="18" 
+                                           FontWeight="SemiBold"
+                                           Foreground="#212121"/>
+                                
+                                <ItemsControl ItemsSource="{Binding ServiciosDisponibles}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F5F5F5" 
+                                                    Padding="15" 
+                                                    Margin="0,0,0,10"
+                                                    CornerRadius="6"
+                                                    BorderBrush="#E0E0E0"
+                                                    BorderThickness="1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Grid.Column="0" Spacing="5">
+                                                        <TextBlock Text="{Binding Nombre}" 
+                                                                   FontSize="15" 
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="#212121"/>
+                                                        <TextBlock FontSize="13" Foreground="#666">
+                                                            <Run Text="L"/>
+                                                            <Run Text="{Binding CostoMensual, StringFormat='{}{0:N2}'}"/>
+                                                            <Run Text=" •"/>
+                                                            <Run Text="{Binding Periodicidad}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+
+                                                    <Button Grid.Column="1"
+                                                            Content="➕ Asignar"
+                                                            Command="{Binding $parent[ItemsControl].((vm:PersonasViewModel)DataContext).AsignarServicioCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Background="#4CAF50"
+                                                            Foreground="White"
+                                                            Padding="15,8"
+                                                            FontSize="13"
+                                                            CornerRadius="4"
+                                                            BorderThickness="0"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <!-- Botón Cerrar Vista de Servicios -->
+                            <Button Content="← Volver"
+                                    Command="{Binding CancelarEdicionCommand}"
+                                    Background="#2196F3"
+                                    Foreground="White"
+                                    Padding="25,10"
+                                    FontSize="14"
+                                    CornerRadius="4"
+                                    HorizontalAlignment="Left"
+                                    BorderThickness="0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
             </Border>
         </Grid>
 

@@ -24,6 +24,7 @@ public class Persona : BaseEntity
     
     public ICollection<Aporte> Aportes { get; set; } = new List<Aporte>();
     public ICollection<ParticipacionActividad> Participaciones { get; set; } = new List<ParticipacionActividad>();
+    public ICollection<PersonaServicio> PersonaServicios { get; set; } = new List<PersonaServicio>();
 }
 
 public enum EstadoParticipacion
