@@ -70,6 +70,7 @@ public class EmpresaService : ServicioBase, IEmpresaService
         empresaExistente.CorreoElectronico = empresa.CorreoElectronico;
         empresaExistente.Representante = empresa.Representante;
         empresaExistente.TelefonoRepresentante = empresa.TelefonoRepresentante;
+        empresaExistente.FormatoRecibo = empresa.FormatoRecibo;
         empresaExistente.FechaModificacion = DateTime.Now;
 
         await UnitOfWork.Empresas.ActualizarAsync(empresaExistente);

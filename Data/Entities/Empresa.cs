@@ -15,4 +15,9 @@ public class Empresa : BaseEntity
     public string CorreoElectronico { get; set; } = string.Empty;
     public string? Representante { get; set; }
     public string? TelefonoRepresentante { get; set; }
+    
+    /// <summary>
+    /// Formato de impresión de recibos: "MediaCarta", "Ticket80mm"
+    /// </summary>
+    public string FormatoRecibo { get; set; } = "MediaCarta";
 }

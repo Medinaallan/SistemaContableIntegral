@@ -79,6 +79,9 @@ class Program
         services.AddScoped<IServicioService, ServicioService>();
         services.AddScoped<IPersonaServicioService, PersonaServicioService>();
         services.AddScoped<ICobroService, CobroService>();
+        services.AddScoped<RecibosPdfService>(); // Servicio de generación de PDFs
+        // Aportes
+        services.AddScoped<IAporteService, AporteService>();
 
         Services = services.BuildServiceProvider();
     }

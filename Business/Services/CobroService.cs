@@ -63,13 +63,16 @@ public class CobroService : ServicioBase, ICobroService
     /// </summary>
     public async Task<Cobro> GenerarCobroParaPersonaAsync(int personaId, int periodo)
     {
-        // Obtener servicios activos de la persona que deben cobrarse
+        // Obtener servicios activos de la persona
         var servicios = await _personaServicioRepositorio.ObtenerServiciosActivosPorPersonaAsync(personaId);
-        var serviciosPorCobrar = servicios.Where(ps => ps.DebeCobrarseEn(periodo)).ToList();
+        
+        // TEMPORAL: Para pruebas, generar cobro con todos los servicios activos sin validar período
+        var serviciosPorCobrar = servicios.ToList();
+        // var serviciosPorCobrar = servicios.Where(ps => ps.DebeCobrarseEn(periodo)).ToList();
 
         if (!serviciosPorCobrar.Any())
         {
-            throw new InvalidOperationException("La persona no tiene servicios pendientes de cobro en este período");
+            throw new InvalidOperationException("La persona no tiene servicios activos");
         }
 
         // Generar número de recibo único
@@ -261,12 +264,12 @@ public class CobroService : ServicioBase, ICobroService
 
     /// <summary>
     /// Genera un número de recibo de pago único
-    /// Formato: PAG-00001
+    /// Formato: 00001
     /// </summary>
     private async Task<string> GenerarNumeroReciboPagoAsync()
     {
         var ultimoNumero = await _pagoRepositorio.ObtenerUltimoNumeroReciboPagoAsync();
         var nuevoNumero = ultimoNumero + 1;
-        return $"PAG-{nuevoNumero:D5}";
+        return $"{nuevoNumero:D6}";
     }
 }

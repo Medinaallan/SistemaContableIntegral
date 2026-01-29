@@ -1,0 +1,233 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SistemaComunidad.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="800"
+        x:Class="SistemaComunidad.Views.ConfirmarCobroWindow"
+        x:DataType="vm:ConfirmarCobroViewModel"
+        Title="Confirmar Generación de Cobro"
+        Width="700" Height="800"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="False"
+        Background="#F5F5F5">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Encabezado -->
+        <Border Grid.Row="0" Background="#4CAF50" Padding="25,20">
+            <StackPanel>
+                <TextBlock Text="Previsualización del Cobro" 
+                           FontSize="24" 
+                           FontWeight="Bold"
+                           Foreground="White"/>
+                <TextBlock Text="Revise los detalles antes de generar" 
+                           FontSize="13" 
+                           Foreground="White"
+                           Opacity="0.9"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Contenido -->
+        <ScrollViewer Grid.Row="1" Padding="25">
+            <StackPanel Spacing="20">
+                
+                <!-- Información de la Persona -->
+                <Border Background="White" 
+                        Padding="20" 
+                        CornerRadius="8" 
+                        BoxShadow="0 2 8 0 #20000000">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="INFORMACIÓN DEL CLIENTE" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Foreground="#1B5E20"
+                                   Margin="0,0,0,8"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nombre:" FontWeight="SemiBold" Foreground="#555"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding NombrePersona}" FontSize="15" Foreground="#212121"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Identidad:" FontWeight="SemiBold" Foreground="#555" Margin="0,5,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding IdentidadPersona}" FontSize="15" Foreground="#212121" Margin="0,5,0,0"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Período:" FontWeight="SemiBold" Foreground="#555" Margin="0,5,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PeriodoTexto}" FontSize="15" Foreground="#212121" Margin="0,5,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Detalle de Servicios -->
+                <Border Background="White" 
+                        Padding="20" 
+                        CornerRadius="8" 
+                        BoxShadow="0 2 8 0 #20000000">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="DETALLE DE SERVICIOS" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Foreground="#1565C0"
+                                   Margin="0,0,0,8"/>
+                        
+                        <ItemsControl ItemsSource="{Binding DetalleServicios}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="vm:DetalleServicioPreview">
+                                    <Border Background="#FAFAFA" 
+                                            Padding="15" 
+                                            Margin="0,0,0,8"
+                                            CornerRadius="4"
+                                            BorderBrush="#E0E0E0"
+                                            BorderThickness="1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Concepto}" 
+                                                           FontWeight="SemiBold"
+                                                           FontSize="14"
+                                                           Foreground="#212121"/>
+                                                <TextBlock FontSize="12" Foreground="#666" Margin="0,3,0,0">
+                                                    <Run Text="Cantidad:"/>
+                                                    <Run Text="{Binding Cantidad}" FontWeight="Medium"/>
+                                                    <Run Text=" x L."/>
+                                                    <Run Text="{Binding PrecioUnitario, StringFormat={}{0:N2}}" FontWeight="Medium"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Grid.Column="1" 
+                                                       FontSize="18"
+                                                       FontWeight="Bold"
+                                                       Foreground="#2196F3"
+                                                       VerticalAlignment="Center">
+                                                <Run Text="L."/>
+                                                <Run Text="{Binding Subtotal, StringFormat={}{0:N2}}"/>
+                                            </TextBlock>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Total -->
+                <Border Background="#E8F5E9" 
+                        Padding="20" 
+                        CornerRadius="8" 
+                        BorderBrush="#4CAF50"
+                        BorderThickness="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" 
+                                   Text="TOTAL A COBRAR" 
+                                   FontSize="18" 
+                                   FontWeight="Bold"
+                                   Foreground="#1B5E20"
+                                   VerticalAlignment="Center"/>
+                        
+                        <TextBlock Grid.Column="1" 
+                                   FontSize="28"
+                                   FontWeight="Bold"
+                                   Foreground="#2E7D32"
+                                   VerticalAlignment="Center">
+                            <Run Text="L."/>
+                            <Run Text="{Binding MontoTotal, StringFormat={}{0:N2}}"/>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+
+                <!-- Número de Recibo -->
+                <Border Background="#FFF8E1" 
+                        Padding="15" 
+                        CornerRadius="6">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Número de Recibo que se generará:" 
+                                   FontSize="12" 
+                                   Foreground="#666"/>
+                        <TextBlock Text="{Binding NumeroReciboProyectado}" 
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Foreground="#F57C00"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Botones de Acción -->
+        <Border Grid.Row="2" 
+                Background="White" 
+                Padding="25,20"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="0"
+                        Content="✓ Confirmar y Generar"
+                        Click="OnConfirmarClick"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        Padding="15,12"
+                        CornerRadius="6"
+                        BorderThickness="0"
+                        HorizontalAlignment="Stretch"
+                        FontSize="14"
+                        FontWeight="SemiBold"/>
+                
+                <Button Grid.Column="2"
+                        Content="🖨️ Generar e Imprimir"
+                        Click="OnConfirmarEImprimirClick"
+                        Background="#2196F3"
+                        Foreground="White"
+                        Padding="15,12"
+                        CornerRadius="6"
+                        BorderThickness="0"
+                        HorizontalAlignment="Stretch"
+                        FontSize="14"
+                        FontWeight="SemiBold"/>
+                
+                <Button Grid.Column="4"
+                        Content="✗ Cancelar"
+                        Click="OnCancelarClick"
+                        Background="#757575"
+                        Foreground="White"
+                        Padding="15,12"
+                        CornerRadius="6"
+                        BorderThickness="0"
+                        HorizontalAlignment="Stretch"
+                        FontSize="14"
+                        FontWeight="SemiBold"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

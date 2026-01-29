@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using SistemaComunidad.Business.Interfaces;
+using SistemaComunidad.Business.Services;
 using SistemaComunidad.ViewModels;
 
 namespace SistemaComunidad.Views
@@ -59,10 +60,13 @@ namespace SistemaComunidad.Views
             {
                 var cobroService = Program.Services?.GetRequiredService<ICobroService>();
                 var personaService = Program.Services?.GetRequiredService<IPersonaService>();
+                var personaServicioService = Program.Services?.GetRequiredService<IPersonaServicioService>();
+                var empresaService = Program.Services?.GetRequiredService<IEmpresaService>();
+                var recibosPdfService = Program.Services?.GetRequiredService<RecibosPdfService>();
                 
-                if (cobroService != null && personaService != null)
+                if (cobroService != null && personaService != null && personaServicioService != null && empresaService != null && recibosPdfService != null)
                 {
-                    var viewModel = new CobrosViewModel(cobroService, personaService);
+                    var viewModel = new CobrosViewModel(cobroService, personaService, personaServicioService, empresaService, recibosPdfService);
                     var window = new CobrosWindow
                     {
                         DataContext = viewModel
@@ -85,9 +89,33 @@ namespace SistemaComunidad.Views
             ShowMessage("Egresos", "Registro de Egresos - En desarrollo");
         }
 
-        private void Aportes_Click(object? sender, RoutedEventArgs e)
+        private async void Aportes_Click(object? sender, RoutedEventArgs e)
         {
-            ShowMessage("Aportes", "Gestión de Aportes - En desarrollo");
+            try
+            {
+                var aporteService = Program.Services?.GetRequiredService<IAporteService>();
+                var personaService = Program.Services?.GetRequiredService<IPersonaService>();
+                if (aporteService != null && personaService != null)
+                {
+                    var viewModel = new AportesViewModel(aporteService, personaService);
+                    var window = new AportesWindow
+                    {
+                        DataContext = viewModel
+                    };
+
+                    // Inicializar datos y mostrar (await para capturar excepciones)
+                    await viewModel.InicializarAsync();
+                    await window.ShowDialog(this);
+                }
+                else
+                {
+                    ShowMessage("Aportes", "Servicios necesarios no disponibles");
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage("Error", $"No se pudo abrir Aportes: {ex.Message}");
+            }
         }
 
         private void Actividades_Click(object? sender, RoutedEventArgs e)

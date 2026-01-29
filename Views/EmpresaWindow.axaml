@@ -194,6 +194,62 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Configuración de Impresión -->
+                <Border Background="White" 
+                        Padding="20" 
+                        CornerRadius="8"
+                        BoxShadow="0 2 8 0 #15000000">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="Configuración de Impresión de Recibos" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#333333"
+                                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Seleccione el formato de impresión para los recibos de pago:" 
+                                   FontSize="13"
+                                   Foreground="#666666"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,5"/>
+
+                        <!-- Selector de Formato -->
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Formato de Recibo *" 
+                                       FontSize="13"
+                                       Foreground="#555555"/>
+                            <ComboBox SelectedIndex="{Binding FormatoReciboIndex}"
+                                      FontSize="14"
+                                      Padding="10"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="Media Carta (5.5 x 8.5 pulgadas)"/>
+                                <ComboBoxItem Content="Ticket 80mm (impresora térmica)"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <Border Background="#E3F2FD" 
+                                Padding="12" 
+                                CornerRadius="4"
+                                BorderBrush="#2196F3"
+                                BorderThickness="1">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="ℹ Información" 
+                                           FontWeight="SemiBold"
+                                           FontSize="12"
+                                           Foreground="#1976D2"/>
+                                <TextBlock TextWrapping="Wrap"
+                                           FontSize="11"
+                                           Foreground="#424242">
+                                    <Run Text="• Media Carta:"/>
+                                    <Run Text="Ideal para impresoras láser o de inyección de tinta. Tamaño estándar para recibos formales."/>
+                                    <LineBreak/>
+                                    <Run Text="• Ticket 80mm:"/>
+                                    <Run Text="Formato compacto para impresoras térmicas de punto de venta (POS). Ahorra papel."/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
                 <!-- Nota sobre campos requeridos -->
                 <TextBlock Text="* Campos obligatorios" 
                            FontSize="12"

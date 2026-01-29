@@ -42,6 +42,23 @@ public partial class EmpresaViewModel : ViewModelBase
     private string? _telefonoRepresentante;
 
     [ObservableProperty]
+    private string _formatoRecibo = "MediaCarta";
+
+    public int FormatoReciboIndex
+    {
+        get => FormatoRecibo == "Ticket80mm" ? 1 : 0;
+        set
+        {
+            var nuevoFormato = value == 1 ? "Ticket80mm" : "MediaCarta";
+            if (FormatoRecibo != nuevoFormato)
+            {
+                FormatoRecibo = nuevoFormato;
+                OnPropertyChanged(nameof(FormatoReciboIndex));
+            }
+        }
+    }
+
+    [ObservableProperty]
     private bool _esNuevoRegistro;
 
     [ObservableProperty]
@@ -123,7 +140,8 @@ public partial class EmpresaViewModel : ViewModelBase
                 Direccion = Direccion?.Trim() ?? string.Empty,
                 CorreoElectronico = CorreoElectronico?.Trim() ?? string.Empty,
                 Representante = string.IsNullOrWhiteSpace(Representante) ? null : Representante.Trim(),
-                TelefonoRepresentante = string.IsNullOrWhiteSpace(TelefonoRepresentante) ? null : TelefonoRepresentante.Trim()
+                TelefonoRepresentante = string.IsNullOrWhiteSpace(TelefonoRepresentante) ? null : TelefonoRepresentante.Trim(),
+                FormatoRecibo = FormatoRecibo ?? "MediaCarta"
             };
 
             if (EsNuevoRegistro)
@@ -165,6 +183,8 @@ public partial class EmpresaViewModel : ViewModelBase
         CorreoElectronico = empresa.CorreoElectronico;
         Representante = empresa.Representante;
         TelefonoRepresentante = empresa.TelefonoRepresentante;
+        FormatoRecibo = empresa.FormatoRecibo ?? "MediaCarta";
+        OnPropertyChanged(nameof(FormatoReciboIndex));
     }
 
     /// <summary>
@@ -181,5 +201,6 @@ public partial class EmpresaViewModel : ViewModelBase
         CorreoElectronico = string.Empty;
         Representante = null;
         TelefonoRepresentante = null;
+        FormatoRecibo = "MediaCarta";
     }
 }
