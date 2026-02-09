@@ -98,18 +98,11 @@ class Program
             {
                 Console.WriteLine("Conexión a la base de datos establecida correctamente");
                 
-                // Intentar aplicar migraciones pendientes solo si es necesario
-                var pendingMigrations = context.Database.GetPendingMigrations();
-                if (pendingMigrations.Any())
-                {
-                    Console.WriteLine($"Hay {pendingMigrations.Count()} migraciones pendientes. Intentando aplicarlas...");
-                    context.Database.Migrate();
-                    Console.WriteLine("Migraciones aplicadas correctamente");
-                }
-                else
-                {
-                    Console.WriteLine("No hay migraciones pendientes. Base de datos actualizada.");
-                }
+                // No aplicar migraciones automáticamente en tiempo de ejecución
+                // para evitar conflictos cuando la base de datos ya fue creada/actualizada
+                // manualmente en el servidor. Si necesitas aplicar migraciones,
+                // ejecuta `dotnet ef database update` desde el entorno de desarrollo
+                Console.WriteLine("Conexión a la base de datos establecida. Las migraciones no se aplican automáticamente.");
             }
             else
             {

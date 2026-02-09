@@ -488,4 +488,41 @@ public class RecibosPdfService
             throw new Exception($"No se pudo abrir el PDF: {ex.Message}");
         }
     }
+
+    /// <summary>
+    /// Genera un comprobante PDF sencillo para un `Aporte`.
+    /// </summary>
+    public string GenerarReciboAporte(Data.Entities.Aporte aporte, Data.Entities.Persona persona, Data.Entities.Empresa empresa)
+    {
+        var carpetaReportes = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reportes");
+        Directory.CreateDirectory(carpetaReportes);
+        var nombreArchivo = $"ReciboAporte_{aporte.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+        var rutaCompleta = Path.Combine(carpetaReportes, nombreArchivo);
+
+        Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.Letter);
+                page.Margin(40);
+                page.DefaultTextStyle(x => x.FontSize(12).FontFamily("Arial"));
+
+                page.Header().Text(empresa?.RazonSocial ?? "Recibo").SemiBold().FontSize(16).AlignCenter();
+                page.Content().Column(col =>
+                {
+                    col.Item().PaddingTop(10).Text($"Recibo Nº: {aporte.NumeroRecibo ?? "(no asignado)"}");
+                    col.Item().Text($"Fecha: {aporte.FechaAporte:dd/MM/yyyy HH:mm}");
+                    col.Item().Text($"Persona: {persona.Nombres} {persona.Apellidos}");
+                    col.Item().Text($"Monto: L. {aporte.Monto:N2}");
+                    col.Item().PaddingTop(8).Text("Concepto:").Bold();
+                    col.Item().Text(aporte.Concepto ?? "");
+                });
+
+                page.Footer().AlignCenter().Text("Comprobante generado automáticamente").FontSize(9);
+            });
+        })
+        .GeneratePdf(rutaCompleta);
+
+        return rutaCompleta;
+    }
 }

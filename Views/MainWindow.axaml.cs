@@ -95,9 +95,11 @@ namespace SistemaComunidad.Views
             {
                 var aporteService = Program.Services?.GetRequiredService<IAporteService>();
                 var personaService = Program.Services?.GetRequiredService<IPersonaService>();
-                if (aporteService != null && personaService != null)
+                var empresaService = Program.Services?.GetRequiredService<IEmpresaService>();
+                var recibosPdfService = Program.Services?.GetRequiredService<RecibosPdfService>();
+                if (aporteService != null && personaService != null && empresaService != null && recibosPdfService != null)
                 {
-                    var viewModel = new AportesViewModel(aporteService, personaService);
+                    var viewModel = new AportesViewModel(aporteService, personaService, empresaService, recibosPdfService);
                     var window = new AportesWindow
                     {
                         DataContext = viewModel

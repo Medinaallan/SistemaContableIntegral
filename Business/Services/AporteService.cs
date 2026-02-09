@@ -48,17 +48,25 @@ namespace SistemaComunidad.Business.Services
 
     public async Task<int> ObtenerUltimoNumeroReciboAsync()
     {
-        var todos = await _unitOfWork.Aportes.ObtenerTodosAsync();
-        var last = todos.OrderByDescending(a => a.Id).FirstOrDefault();
-        if (last == null || string.IsNullOrEmpty(last.NumeroRecibo)) return 0;
-
-        var partes = last.NumeroRecibo.Split('-');
-        if (partes.Length >= 2 && int.TryParse(partes[1], out int numero))
+        try
         {
-            return numero;
-        }
+            var todos = await _unitOfWork.Aportes.ObtenerTodosAsync();
+            var last = todos.OrderByDescending(a => a.Id).FirstOrDefault();
+            if (last == null || string.IsNullOrEmpty(last.NumeroRecibo)) return 0;
 
-        return 0;
+            var partes = last.NumeroRecibo.Split('-');
+            if (partes.Length >= 2 && int.TryParse(partes[1], out int numero))
+            {
+                return numero;
+            }
+
+            return 0;
+        }
+        catch (Microsoft.Data.SqlClient.SqlException)
+        {
+            // If the column does not exist in the database yet, treat as starting from 0.
+            return 0;
+        }
     }
 }
 

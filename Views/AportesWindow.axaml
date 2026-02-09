@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
         x:Class="SistemaComunidad.Views.AportesWindow"
+        x:Name="Root"
         x:DataType="vm:AportesViewModel"
         Title="Aportes y Donaciones"
         Width="900" Height="700"
@@ -79,7 +80,10 @@
                                         <StackPanel>
                                             <TextBlock Text="{Binding Concepto}" FontWeight="Bold"/>
                                             <TextBlock Text="{Binding FechaAporte, StringFormat={}{0:dd/MM/yyyy HH:mm}}" FontSize="12" Foreground="#666"/>
-                                            <TextBlock Text="{Binding Monto, StringFormat=\L.{0:N2}}" FontSize="14" FontWeight="Bold" Foreground="#4CAF50"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                                <TextBlock Text="{Binding Monto, StringFormat=\L.{0:N2}}" FontSize="14" FontWeight="Bold" Foreground="#4CAF50"/>
+                                                <Button Content="Imprimir" Command="{Binding DataContext.ImprimirAporteCommand, ElementName=Root}" CommandParameter="{Binding}" Margin="10,0,0,0"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
