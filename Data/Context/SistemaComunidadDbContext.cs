@@ -27,6 +27,7 @@ public class SistemaComunidadDbContext : DbContext
     public DbSet<Cobro> Cobros { get; set; }
     public DbSet<CobroDetalle> CobroDetalles { get; set; }
     public DbSet<Pago> Pagos { get; set; }
+    public DbSet<MiembroFamiliar> MiembrosFamiliares { get; set; }
 
     public SistemaComunidadDbContext(DbContextOptions<SistemaComunidadDbContext> options) 
         : base(options)
@@ -55,6 +56,7 @@ public class SistemaComunidadDbContext : DbContext
         ConfigurarCobro(modelBuilder);
         ConfigurarCobroDetalle(modelBuilder);
         ConfigurarPago(modelBuilder);
+        ConfigurarMiembroFamiliar(modelBuilder);
 
         // Datos iniciales (seed)
         SeedDataInicial(modelBuilder);
@@ -403,6 +405,33 @@ public class SistemaComunidadDbContext : DbContext
             entity.HasIndex(e => e.CobroId);
             entity.HasIndex(e => e.PersonaId);
             entity.HasIndex(e => e.FechaPago);
+        });
+    }
+
+    private void ConfigurarMiembroFamiliar(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MiembroFamiliar>(entity =>
+        {
+            entity.ToTable("MiembrosFamiliares");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Nombres).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Apellidos).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Telefono).HasMaxLength(20);
+            entity.Property(e => e.Notas).HasMaxLength(500);
+            entity.Property(e => e.Rol).IsRequired();
+
+            entity.HasOne(e => e.NucleoFamiliar)
+                  .WithMany(n => n.MiembrosFamiliares)
+                  .HasForeignKey(e => e.NucleoFamiliarId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Persona)
+                  .WithMany()
+                  .HasForeignKey(e => e.PersonaId)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(e => e.NucleoFamiliarId);
+            entity.HasIndex(e => e.PersonaId);
         });
     }
 

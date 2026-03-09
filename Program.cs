@@ -63,6 +63,7 @@ class Program
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         // Repositorios
+        services.AddScoped<INucleoFamiliarRepositorio, NucleoFamiliarRepositorio>();
         services.AddScoped<IPersonaRepositorio, PersonaRepositorio>();
         services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
         services.AddScoped<IEmpresaRepositorio, EmpresaRepositorio>();
@@ -82,6 +83,8 @@ class Program
         services.AddScoped<RecibosPdfService>(); // Servicio de generación de PDFs
         // Aportes
         services.AddScoped<IAporteService, AporteService>();
+        // Familias
+        services.AddScoped<INucleoFamiliarService, NucleoFamiliarService>();
 
         Services = services.BuildServiceProvider();
     }

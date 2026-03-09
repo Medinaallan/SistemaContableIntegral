@@ -1,0 +1,805 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SistemaComunidad.ViewModels"
+        xmlns:views="using:SistemaComunidad.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+        x:Class="SistemaComunidad.Views.FamiliasWindow"
+        x:DataType="vm:FamiliasViewModel"
+        Title="Gestión de Familias"
+        Width="1200" Height="700"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="True"
+        Background="#F5F5F5">
+
+    <Design.DataContext>
+        <vm:FamiliasViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ============================================ -->
+        <!-- Panel Izquierdo - Lista de Familias -->
+        <!-- ============================================ -->
+        <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Encabezado -->
+                <Border Grid.Row="0" Background="#3F51B5" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Familias" 
+                                   FontSize="24" 
+                                   FontWeight="Bold"
+                                   Foreground="White"/>
+                        <TextBlock Text="Gestión de núcleos familiares" 
+                                   FontSize="12" 
+                                   Foreground="White"
+                                   Opacity="0.9"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Búsqueda -->
+                <Border Grid.Row="1" Padding="15" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+                    <StackPanel Spacing="10">
+                        <TextBox Text="{Binding TextoBusqueda}" 
+                                 Watermark="Buscar familia por nombre..."
+                                 Padding="10"
+                                 FontSize="13"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Content="Buscar" 
+                                    Command="{Binding BuscarCommand}"
+                                    Background="#3F51B5"
+                                    Foreground="White"
+                                    Padding="20,8"
+                                    FontSize="13"
+                                    CornerRadius="4"
+                                    BorderThickness="0">
+                                <Button.Styles>
+                                    <Style Selector="Button:pointerover">
+                                        <Setter Property="Background" Value="#303F9F"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Style>
+                                </Button.Styles>
+                            </Button>
+                            <Button Content="Nueva Familia" 
+                                    Command="{Binding NuevaFamiliaCommand}"
+                                    Background="#4CAF50"
+                                    Foreground="White"
+                                    Padding="20,8"
+                                    FontSize="13"
+                                    CornerRadius="4"
+                                    BorderThickness="0">
+                                <Button.Styles>
+                                    <Style Selector="Button:pointerover">
+                                        <Setter Property="Background" Value="#388E3C"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Style>
+                                </Button.Styles>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Lista de Familias -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Familias}" Padding="10">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White" 
+                                        Padding="15" 
+                                        Margin="5"
+                                        CornerRadius="6"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        Cursor="Hand">
+                                    <Border.Styles>
+                                        <Style Selector="Border:pointerover">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                            <Setter Property="BorderBrush" Value="#3F51B5"/>
+                                        </Style>
+                                    </Border.Styles>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="{Binding Nombre}" 
+                                                       FontSize="14" 
+                                                       FontWeight="SemiBold" 
+                                                       Foreground="#212121"/>
+                                            <TextBlock Text="{Binding Direccion}" 
+                                                       FontSize="12" 
+                                                       Foreground="#666"
+                                                       IsVisible="{Binding Direccion, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                            <TextBlock FontSize="12" Foreground="#3F51B5">
+                                                <Run Text="{Binding MiembrosFamiliares.Count}"/>
+                                                <Run Text=" integrante(s)"/>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                                            <Button Content="Miembros"
+                                                    Command="{Binding $parent[ItemsControl].((vm:FamiliasViewModel)DataContext).VerMiembrosCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#3F51B5"
+                                                    Foreground="White"
+                                                    BorderThickness="0"
+                                                    Padding="10,5"
+                                                    FontSize="11"
+                                                    CornerRadius="3">
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#303F9F"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                            <Button Content="Editar" 
+                                                    Command="{Binding $parent[ItemsControl].((vm:FamiliasViewModel)DataContext).EditarFamiliaCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#FF9800"
+                                                    Foreground="White"
+                                                    BorderThickness="0"
+                                                    Padding="10,5"
+                                                    FontSize="11"
+                                                    CornerRadius="3">
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#F57C00"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                            <Button Content="Eliminar"
+                                                    Command="{Binding $parent[ItemsControl].((vm:FamiliasViewModel)DataContext).EliminarFamiliaCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#F44336"
+                                                    Foreground="White"
+                                                    BorderThickness="0"
+                                                    Padding="10,5"
+                                                    FontSize="11"
+                                                    CornerRadius="3">
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#D32F2F"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Botón Cerrar -->
+                <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="15">
+                    <Button Content="Cerrar" 
+                            Click="OnCerrarClick"
+                            Background="#9E9E9E"
+                            Foreground="White"
+                            Padding="20,10"
+                            FontSize="13"
+                            CornerRadius="4"
+                            HorizontalAlignment="Stretch"
+                            BorderThickness="0">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#757575"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ============================================ -->
+        <!-- Panel Derecho -->
+        <!-- ============================================ -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado Panel Derecho -->
+            <Border Grid.Row="0" Background="#3F51B5" Padding="20">
+                <TextBlock Text="Detalle de la Familia"
+                           FontSize="22" 
+                           FontWeight="SemiBold"
+                           Foreground="White"/>
+            </Border>
+
+            <!-- ================================ -->
+            <!-- Formulario Edición de Familia -->
+            <!-- ================================ -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="30,20" 
+                          IsVisible="{Binding ModoEdicionFamilia}">
+                <StackPanel Spacing="20" MaxWidth="600">
+
+                    <!-- Mensaje -->
+                    <Border IsVisible="{Binding Mensaje, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Padding="12"
+                            CornerRadius="4">
+                        <Border.Styles>
+                            <Style Selector="Border">
+                                <Setter Property="Background" Value="#E8F5E9"/>
+                                <Setter Property="BorderBrush" Value="#66BB6A"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Style>
+                        </Border.Styles>
+                        <TextBlock Text="{Binding Mensaje}" 
+                                   TextWrapping="Wrap"
+                                   FontSize="13"/>
+                    </Border>
+
+                    <!-- Nombre -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Nombre de la Familia *" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding NombreFamilia}" 
+                                 Watermark="Ej: Familia López Hernández"
+                                 Padding="10"
+                                 FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Dirección -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Dirección" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding DireccionFamilia}" 
+                                 Watermark="Dirección del domicilio familiar"
+                                 Padding="10"
+                                 FontSize="14"
+                                 AcceptsReturn="True"
+                                 Height="60"
+                                 TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Teléfono -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Teléfono" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding TelefonoFamilia}" 
+                                 Watermark="+504 0000-0000"
+                                 Padding="10"
+                                 FontSize="14"
+                                 MaxLength="20"/>
+                    </StackPanel>
+
+                    <!-- Notas -->
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Notas" FontSize="13" Foreground="#555"/>
+                        <TextBox Text="{Binding NotasFamilia}" 
+                                 Watermark="Observaciones adicionales"
+                                 Padding="10"
+                                 FontSize="14"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Botones -->
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,20">
+                        <Button Content="Guardar"
+                                Command="{Binding GuardarFamiliaCommand}"
+                                IsEnabled="{Binding !EstaCargando}"
+                                Background="#4CAF50"
+                                Foreground="White"
+                                Padding="25,10"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                CornerRadius="4"
+                                BorderThickness="0">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#388E3C"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                        <Button Content="Cancelar"
+                                Command="{Binding CancelarEdicionFamiliaCommand}"
+                                Background="#9E9E9E"
+                                Foreground="White"
+                                Padding="25,10"
+                                FontSize="14"
+                                CornerRadius="4"
+                                BorderThickness="0">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#757575"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                    </StackPanel>
+
+                    <TextBlock Text="* Campos obligatorios" 
+                               FontSize="11"
+                               Foreground="#666"
+                               FontStyle="Italic"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ================================ -->
+            <!-- Vista de Miembros -->
+            <!-- ================================ -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                          IsVisible="{Binding MostrarMiembros}">
+                <StackPanel Spacing="20" Margin="30,20">
+
+                    <!-- Mensaje -->
+                    <Border IsVisible="{Binding Mensaje, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Padding="12"
+                            CornerRadius="4">
+                        <Border.Styles>
+                            <Style Selector="Border">
+                                <Setter Property="Background" Value="#E8EAF6"/>
+                                <Setter Property="BorderBrush" Value="#7986CB"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Style>
+                        </Border.Styles>
+                        <TextBlock Text="{Binding Mensaje}" 
+                                   Foreground="#283593"
+                                   TextWrapping="Wrap"
+                                   FontSize="13"/>
+                    </Border>
+
+                    <!-- Info Familia -->
+                    <Border Background="White" Padding="20" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding NombreFamilia}" 
+                                       FontSize="20" 
+                                       FontWeight="Bold" 
+                                       Foreground="#212121"/>
+                            <TextBlock Text="{Binding DireccionFamilia}" 
+                                       FontSize="14" 
+                                       Foreground="#666"
+                                       IsVisible="{Binding DireccionFamilia, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            <TextBlock Text="{Binding TelefonoFamilia}" 
+                                       FontSize="14" 
+                                       Foreground="#666"
+                                       IsVisible="{Binding TelefonoFamilia, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Botones de acción -->
+                    <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding !ModoEdicionMiembro}">
+                        <Button Content="+ Nuevo Integrante"
+                                Command="{Binding NuevoMiembroCommand}"
+                                IsVisible="{Binding !MostrarVincularPersona}"
+                                Background="#4CAF50"
+                                Foreground="White"
+                                Padding="15,8"
+                                FontSize="13"
+                                CornerRadius="4"
+                                BorderThickness="0">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#388E3C"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                        <Button Content="Vincular Persona Existente"
+                                Command="{Binding MostrarVincularCommand}"
+                                IsVisible="{Binding !MostrarVincularPersona}"
+                                Background="#3F51B5"
+                                Foreground="White"
+                                Padding="15,8"
+                                FontSize="13"
+                                CornerRadius="4"
+                                BorderThickness="0">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#303F9F"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- ====================== -->
+                    <!-- Formulario Nuevo Miembro -->
+                    <!-- ====================== -->
+                    <Border IsVisible="{Binding ModoEdicionMiembro}"
+                            Background="White" Padding="20" CornerRadius="8" 
+                            BorderBrush="#4CAF50" BorderThickness="2">
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="Datos del Integrante" 
+                                       FontSize="16" FontWeight="SemiBold" 
+                                       Foreground="#212121"/>
+
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" 
+                                  Margin="0" HorizontalAlignment="Stretch">
+                                <!-- Nombres -->
+                                <StackPanel Grid.Row="0" Grid.Column="0" Spacing="5" Margin="0,0,10,10">
+                                    <TextBlock Text="Nombres *" FontSize="12" Foreground="#555"/>
+                                    <TextBox Text="{Binding NombresMiembro}" 
+                                             Watermark="Nombres"
+                                             Padding="8" FontSize="13"/>
+                                </StackPanel>
+                                <!-- Apellidos -->
+                                <StackPanel Grid.Row="0" Grid.Column="1" Spacing="5" Margin="0,0,0,10">
+                                    <TextBlock Text="Apellidos *" FontSize="12" Foreground="#555"/>
+                                    <TextBox Text="{Binding ApellidosMiembro}" 
+                                             Watermark="Apellidos"
+                                             Padding="8" FontSize="13"/>
+                                </StackPanel>
+                                <!-- Teléfono -->
+                                <StackPanel Grid.Row="1" Grid.Column="0" Spacing="5" Margin="0,0,10,10">
+                                    <TextBlock Text="Teléfono" FontSize="12" Foreground="#555"/>
+                                    <TextBox Text="{Binding TelefonoMiembro}" 
+                                             Watermark="+504 0000-0000"
+                                             Padding="8" FontSize="13" MaxLength="20"/>
+                                </StackPanel>
+                                <!-- Rol -->
+                                <StackPanel Grid.Row="1" Grid.Column="1" Spacing="5" Margin="0,0,0,10">
+                                    <TextBlock Text="Rol en la Familia *" FontSize="12" Foreground="#555"/>
+                                    <ComboBox ItemsSource="{Binding RolesDisponibles}"
+                                              SelectedItem="{Binding RolMiembro}"
+                                              Padding="8" FontSize="13"
+                                              HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <!-- Notas -->
+                                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Spacing="5" Margin="0,0,0,10">
+                                    <TextBlock Text="Notas" FontSize="12" Foreground="#555"/>
+                                    <TextBox Text="{Binding NotasMiembro}" 
+                                             Watermark="Observaciones"
+                                             Padding="8" FontSize="13"
+                                             AcceptsReturn="True" Height="50" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button Content="Guardar"
+                                        Command="{Binding GuardarMiembroCommand}"
+                                        IsEnabled="{Binding !EstaCargando}"
+                                        Background="#4CAF50"
+                                        Foreground="White"
+                                        Padding="20,8"
+                                        FontSize="13"
+                                        CornerRadius="4"
+                                        BorderThickness="0">
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="Background" Value="#388E3C"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+                                <Button Content="Cancelar"
+                                        Command="{Binding CancelarEdicionMiembroCommand}"
+                                        Background="#9E9E9E"
+                                        Foreground="White"
+                                        Padding="20,8"
+                                        FontSize="13"
+                                        CornerRadius="4"
+                                        BorderThickness="0">
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="Background" Value="#757575"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ========================== -->
+                    <!-- Vincular Persona Existente -->
+                    <!-- ========================== -->
+                    <Border IsVisible="{Binding MostrarVincularPersona}"
+                            Background="White" Padding="20" CornerRadius="8" 
+                            BorderBrush="#3F51B5" BorderThickness="2">
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="Vincular Persona Existente" 
+                                       FontSize="16" FontWeight="SemiBold" 
+                                       Foreground="#212121"/>
+
+                            <!-- Búsqueda de persona -->
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBox Text="{Binding BusquedaPersona}" 
+                                         Watermark="Buscar persona por nombre..."
+                                         Padding="8" FontSize="13" Width="300"/>
+                                <Button Content="Buscar"
+                                        Command="{Binding BuscarPersonaCommand}"
+                                        Background="#3F51B5"
+                                        Foreground="White"
+                                        Padding="15,8"
+                                        FontSize="13"
+                                        CornerRadius="4"
+                                        BorderThickness="0">
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="Background" Value="#303F9F"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Rol a asignar -->
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Rol en la Familia" FontSize="12" Foreground="#555"/>
+                                <ComboBox ItemsSource="{Binding RolesDisponibles}"
+                                          SelectedItem="{Binding RolVincular}"
+                                          Padding="8" FontSize="13" Width="250"/>
+                            </StackPanel>
+
+                            <!-- Lista de personas disponibles -->
+                            <Border MaxHeight="250" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding PersonasDisponibles}" Padding="5">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#FAFAFA" 
+                                                        Padding="12" 
+                                                        Margin="0,0,0,5"
+                                                        CornerRadius="4"
+                                                        BorderBrush="#E0E0E0"
+                                                        BorderThickness="1">
+                                                    <Border.Styles>
+                                                        <Style Selector="Border:pointerover">
+                                                            <Setter Property="Background" Value="#E8EAF6"/>
+                                                            <Setter Property="BorderBrush" Value="#3F51B5"/>
+                                                        </Style>
+                                                    </Border.Styles>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Grid.Column="0" Spacing="3">
+                                                            <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#212121">
+                                                                <Run Text="{Binding Nombres}"/>
+                                                                <Run Text=" "/>
+                                                                <Run Text="{Binding Apellidos}"/>
+                                                            </TextBlock>
+                                                            <TextBlock Text="{Binding Telefono}" 
+                                                                       FontSize="11" 
+                                                                       Foreground="#666"
+                                                                       IsVisible="{Binding Telefono, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1"
+                                                                Content="Vincular"
+                                                                Command="{Binding $parent[ItemsControl].((vm:FamiliasViewModel)DataContext).VincularPersonaCommand}"
+                                                                CommandParameter="{Binding}"
+                                                                Background="#3F51B5"
+                                                                Foreground="White"
+                                                                Padding="12,6"
+                                                                FontSize="12"
+                                                                CornerRadius="3"
+                                                                BorderThickness="0"
+                                                                VerticalAlignment="Center">
+                                                            <Button.Styles>
+                                                                <Style Selector="Button:pointerover">
+                                                                    <Setter Property="Background" Value="#303F9F"/>
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                </Style>
+                                                            </Button.Styles>
+                                                        </Button>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+
+                            <Button Content="← Cancelar"
+                                    Command="{Binding CancelarVincularCommand}"
+                                    Background="#9E9E9E"
+                                    Foreground="White"
+                                    Padding="15,8"
+                                    FontSize="13"
+                                    CornerRadius="4"
+                                    BorderThickness="0">
+                                <Button.Styles>
+                                    <Style Selector="Button:pointerover">
+                                        <Setter Property="Background" Value="#757575"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Style>
+                                </Button.Styles>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ====================== -->
+                    <!-- Lista de Miembros -->
+                    <!-- ====================== -->
+                    <StackPanel Spacing="15" IsVisible="{Binding !ModoEdicionMiembro}">
+                        <TextBlock Text="Integrantes" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#212121"/>
+
+                        <ItemsControl ItemsSource="{Binding Miembros}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="White" 
+                                            Padding="15" 
+                                            Margin="0,0,0,10"
+                                            CornerRadius="6"
+                                            BorderBrush="#E0E0E0"
+                                            BorderThickness="1">
+                                        <Border.Styles>
+                                            <Style Selector="Border:pointerover">
+                                                <Setter Property="Background" Value="#FAFAFA"/>
+                                                <Setter Property="BorderBrush" Value="#3F51B5"/>
+                                            </Style>
+                                        </Border.Styles>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Badge Rol -->
+                                            <Border Grid.Column="0" 
+                                                    Background="#E8EAF6"
+                                                    CornerRadius="4"
+                                                    Padding="8,5"
+                                                    VerticalAlignment="Center"
+                                                    Margin="0,0,12,0">
+                                                <TextBlock Text="{Binding Rol}" 
+                                                           FontSize="11" 
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#3F51B5"/>
+                                            </Border>
+
+                                            <!-- Info miembro -->
+                                            <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                                <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="#212121">
+                                                    <Run Text="{Binding Nombres}"/>
+                                                    <Run Text=" "/>
+                                                    <Run Text="{Binding Apellidos}"/>
+                                                </TextBlock>
+                                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                                    <TextBlock Text="{Binding Telefono}" 
+                                                               FontSize="12" 
+                                                               Foreground="#666"
+                                                               IsVisible="{Binding Telefono, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                                    <Border IsVisible="{Binding PersonaId, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                            Background="#E8F5E9" CornerRadius="3" Padding="6,2">
+                                                        <TextBlock Text="Vinculado" 
+                                                                   FontSize="10" 
+                                                                   Foreground="#2E7D32"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Botones -->
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                                <Button Content="Editar"
+                                                        Command="{Binding $parent[ItemsControl].((vm:FamiliasViewModel)DataContext).EditarMiembroCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Background="#FF9800"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        Padding="10,5"
+                                                        FontSize="11"
+                                                        CornerRadius="3">
+                                                    <Button.Styles>
+                                                        <Style Selector="Button:pointerover">
+                                                            <Setter Property="Background" Value="#F57C00"/>
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                        </Style>
+                                                    </Button.Styles>
+                                                </Button>
+                                                <Button Content="Quitar"
+                                                        Command="{Binding $parent[ItemsControl].((vm:FamiliasViewModel)DataContext).EliminarMiembroCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Background="#F44336"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        Padding="10,5"
+                                                        FontSize="11"
+                                                        CornerRadius="3">
+                                                    <Button.Styles>
+                                                        <Style Selector="Button:pointerover">
+                                                            <Setter Property="Background" Value="#D32F2F"/>
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                        </Style>
+                                                    </Button.Styles>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="No hay integrantes registrados en esta familia" 
+                                   FontSize="14"
+                                   Foreground="#999"
+                                   FontStyle="Italic"
+                                   IsVisible="{Binding !Miembros.Count}"/>
+                    </StackPanel>
+
+                    <!-- Botón Volver -->
+                    <Button Content="← Volver"
+                            Command="{Binding CancelarEdicionFamiliaCommand}"
+                            Background="#3F51B5"
+                            Foreground="White"
+                            Padding="25,10"
+                            FontSize="14"
+                            CornerRadius="4"
+                            HorizontalAlignment="Left"
+                            BorderThickness="0"
+                            Margin="0,10,0,20">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#303F9F"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ================================ -->
+            <!-- Vista Vacía -->
+            <!-- ================================ -->
+            <Border Grid.Row="1" 
+                    IsVisible="{Binding !ModoEdicionFamilia}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15"
+                            IsVisible="{Binding !MostrarMiembros}">
+                    <TextBlock Text="👨‍👩‍👧‍👦" FontSize="64" HorizontalAlignment="Center" Opacity="0.3"/>
+                    <TextBlock Text="Seleccione una familia o cree una nueva" 
+                               FontSize="16"
+                               Foreground="#999"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ============================================ -->
+        <!-- Indicador de Carga -->
+        <!-- ============================================ -->
+        <Border Grid.Column="0" Grid.ColumnSpan="2"
+                IsVisible="{Binding EstaCargando}"
+                Background="#CC000000">
+            <Border Background="White"
+                    Padding="40"
+                    CornerRadius="8"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BoxShadow="0 4 20 0 #40000000">
+                <StackPanel Spacing="20" HorizontalAlignment="Center">
+                    <Border Width="50" Height="50"
+                            Background="#3F51B5"
+                            CornerRadius="25"
+                            HorizontalAlignment="Center">
+                        <TextBlock Text="⏳" 
+                                   FontSize="28" 
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Cargando..." 
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#424242"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</Window>

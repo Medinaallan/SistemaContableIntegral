@@ -49,9 +49,24 @@ namespace SistemaComunidad.Views
             }
         }
 
-        private void Familias_Click(object? sender, RoutedEventArgs e)
+        private async void Familias_Click(object? sender, RoutedEventArgs e)
         {
-            ShowMessage("Familias", "Gestión de Familias - En desarrollo");
+            try
+            {
+                var nucleoFamiliarService = Program.Services?.GetRequiredService<INucleoFamiliarService>();
+                var personaService = Program.Services?.GetRequiredService<IPersonaService>();
+
+                if (nucleoFamiliarService != null && personaService != null)
+                {
+                    var viewModel = new FamiliasViewModel(nucleoFamiliarService, personaService);
+                    var window = new FamiliasWindow(viewModel);
+                    await window.ShowDialog(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage("Error", $"No se pudo abrir Familias: {ex.Message}");
+            }
         }
 
         private async void Ingresos_Click(object? sender, RoutedEventArgs e)

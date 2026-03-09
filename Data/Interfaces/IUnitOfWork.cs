@@ -10,7 +10,8 @@ public interface IUnitOfWork : IDisposable
 {
     IPersonaRepositorio Personas { get; }
     IUsuarioRepositorio Usuarios { get; }
-    IRepositorio<SistemaComunidad.Data.Entities.NucleoFamiliar> NucleosFamiliares { get; }
+    INucleoFamiliarRepositorio NucleosFamiliares { get; }
+    IRepositorio<SistemaComunidad.Data.Entities.MiembroFamiliar> MiembrosFamiliares { get; }
     IRepositorio<SistemaComunidad.Data.Entities.Aporte> Aportes { get; }
     IRepositorio<SistemaComunidad.Data.Entities.Ingreso> Ingresos { get; }
     IRepositorio<SistemaComunidad.Data.Entities.Egreso> Egresos { get; }

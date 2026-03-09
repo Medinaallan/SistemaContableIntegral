@@ -14,4 +14,5 @@ public class NucleoFamiliar : BaseEntity
     
     // Relaciones
     public ICollection<Persona> Miembros { get; set; } = new List<Persona>();
+    public ICollection<MiembroFamiliar> MiembrosFamiliares { get; set; } = new List<MiembroFamiliar>();
 }

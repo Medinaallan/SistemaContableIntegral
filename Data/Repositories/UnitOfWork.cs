@@ -17,7 +17,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IPersonaRepositorio Personas { get; }
     public IUsuarioRepositorio Usuarios { get; }
-    public IRepositorio<NucleoFamiliar> NucleosFamiliares { get; }
+    public INucleoFamiliarRepositorio NucleosFamiliares { get; }
+    public IRepositorio<MiembroFamiliar> MiembrosFamiliares { get; }
     public IRepositorio<Aporte> Aportes { get; }
     public IRepositorio<Ingreso> Ingresos { get; }
     public IRepositorio<Egreso> Egresos { get; }
@@ -34,7 +35,8 @@ public class UnitOfWork : IUnitOfWork
         // Inicializar repositorios
         Personas = new PersonaRepositorio(_context);
         Usuarios = new UsuarioRepositorio(_context);
-        NucleosFamiliares = new Repositorio<NucleoFamiliar>(_context);
+        NucleosFamiliares = new NucleoFamiliarRepositorio(_context);
+        MiembrosFamiliares = new Repositorio<MiembroFamiliar>(_context);
         Aportes = new Repositorio<Aporte>(_context);
         Ingresos = new Repositorio<Ingreso>(_context);
         Egresos = new Repositorio<Egreso>(_context);
