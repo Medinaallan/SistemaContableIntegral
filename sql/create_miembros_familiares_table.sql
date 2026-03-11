@@ -1,4 +1,4 @@
--- =============================================
+ -- =============================================
 -- Migración: Agregar tabla MiembrosFamiliares
 -- Fecha: 2026-03-09
 -- Descripción: Tabla para gestionar integrantes de núcleos familiares.
